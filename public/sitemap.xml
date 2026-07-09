@@ -2,31 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Core pages -->
   <url>
-    <loc>https://futurefund.io/</loc>
+    <loc>https://future-funds-calculator.vercel.app</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.00</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/about</loc>
+    <loc>https://future-funds-calculator.vercel.appabout</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/blog</loc>
+    <loc>https://future-funds-calculator.vercel.appblog</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/faq</loc>
+    <loc>https://future-funds-calculator.vercel.appfaq</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/contact</loc>
+    <loc>https://future-funds-calculator.vercel.appcontact</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.70</priority>
@@ -34,25 +34,25 @@
 
   <!-- Legal sheets -->
   <url>
-    <loc>https://futurefund.io/privacy</loc>
+    <loc>https://future-funds-calculator.vercel.appprivacy</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/terms</loc>
+    <loc>https://future-funds-calculator.vercel.appterms</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/disclaimer</loc>
+    <loc>https://future-funds-calculator.vercel.appdisclaimer</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/cookie</loc>
+    <loc>https://future-funds-calculator.vercel.appcookie</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
