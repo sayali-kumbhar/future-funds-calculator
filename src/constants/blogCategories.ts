@@ -1,0 +1,18 @@
+export const BLOG_CATEGORIES = [
+  'All Articles',
+  'Beginner Guides',
+  'Financial Freedom',
+  'Retirement',
+  'Investing',
+  'Mutual Funds',
+  'Savings',
+  'Passive Income',
+  'Money Mindset',
+  'Tax Planning',
+  'Personal Finance',
+  'Family Finance',
+  'Stock Market',
+  'Budgeting',
+  'Career & Income',
+  'Side Hustles',
+] as const;

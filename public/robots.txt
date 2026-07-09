@@ -1,0 +1,16 @@
+# https://www.robotstxt.org/robotstxt.html
+# FutureFund Crawler Specification - July 2026
+
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /about
+Allow: /blog
+Allow: /faq
+Allow: /contact
+
+Disallow: /assets/.aistudio/
+Disallow: /node_modules/
+Disallow: /dist/
+
+Sitemap: https://futurefund.io/sitemap.xml

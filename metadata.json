@@ -1,0 +1,6 @@
+{
+  "name": "FutureFund",
+  "description": "Estimate your financial freedom age, simulate what-if scenarios, and generate a custom path to financial independence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
