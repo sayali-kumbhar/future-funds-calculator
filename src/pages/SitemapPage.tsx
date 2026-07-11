@@ -17,58 +17,58 @@ export default function SitemapPage({}: SitemapPageProps) {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Core pages -->
   <url>
-    <loc>https://futurefund.io/</loc>
-    <lastmod>2026-07-07</lastmod>
+    <loc>https://future-funds-calculator.vercel.app/</loc>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.00</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/about</loc>
-    <lastmod>2026-07-07</lastmod>
+    <loc>https://future-funds-calculator.vercel.app/about</loc>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/blog</loc>
-    <lastmod>2026-07-07</lastmod>
+    <loc>https://future-funds-calculator.vercel.app/blog</loc>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/faq</loc>
-    <lastmod>2026-07-07</lastmod>
+    <loc>https://future-funds-calculator.vercel.app/faq</loc>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/contact</loc>
-    <lastmod>2026-07-07</lastmod>
+    <loc>https://future-funds-calculator.vercel.app/contact</loc>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.70</priority>
   </url>
 
   <!-- Legal sheets -->
   <url>
-    <loc>https://futurefund.io/privacy</loc>
-    <lastmod>2026-07-07</lastmod>
+    <loc>https://future-funds-calculator.vercel.app/privacy</loc>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/terms</loc>
-    <lastmod>2026-07-07</lastmod>
+    <loc>https://future-funds-calculator.vercel.app/terms</loc>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/disclaimer</loc>
-    <lastmod>2026-07-07</lastmod>
+    <loc>https://future-funds-calculator.vercel.app/disclaimer</loc>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://futurefund.io/cookie</loc>
-    <lastmod>2026-07-07</lastmod>
+    <loc>https://future-funds-calculator.vercel.app/cookie</loc>
+    <lastmod>2026-07-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>

@@ -21,7 +21,7 @@ Disallow: /assets/.aistudio/
 Disallow: /node_modules/
 Disallow: /dist/
 
-Sitemap: https://futurefund.io/sitemap.xml`;
+Sitemap: https://future-funds-calculator.vercel.app/sitemap.xml`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(robotsTxt);

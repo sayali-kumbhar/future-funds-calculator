@@ -3,7 +3,7 @@ import path from 'path';
 import { blogData } from '../src/data/blogData';
 import { CALCULATORS_LIST } from '../src/data/calculatorsData';
 
-const BASE_URL = 'https://futurefund.io';
+const BASE_URL = 'https://future-funds-calculator.vercel.app';
 const PUBLIC_DIR = path.join(process.cwd(), 'public');
 
 function generateSitemap() {
