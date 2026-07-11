@@ -31,6 +31,7 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
+  Legend,
 } from 'recharts';
 
 export default function CalculatorsPage() {
@@ -546,7 +547,13 @@ export default function CalculatorsPage() {
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.06} />
                       <XAxis
-                        dataKey="year"
+                        dataKey={
+                          Object.keys(results.chartData[0]).includes('year') ? 'year' :
+                          Object.keys(results.chartData[0]).includes('age') ? 'age' :
+                          Object.keys(results.chartData[0]).includes('name') ? 'name' :
+                          Object.keys(results.chartData[0]).includes('label') ? 'label' :
+                          Object.keys(results.chartData[0])[0]
+                        }
                         stroke="#6b7280"
                         fontSize={9}
                         tickLine={false}
@@ -568,16 +575,45 @@ export default function CalculatorsPage() {
                           fontSize: '10px',
                         }}
                         formatter={(val: any) => [formatCurrency(val), '']}
-                        labelFormatter={(label) => `Timeline: ${label}`}
+                        labelFormatter={(label) => `Indicator: ${label}`}
                       />
-                      <Area
-                        type="monotone"
-                        dataKey={Object.keys(results.chartData[0]).find(k => k !== 'year' && k !== 'age') || 'wealth'}
-                        stroke="#10b981"
-                        strokeWidth={2}
-                        fillOpacity={1}
-                        fill="url(#colorValue)"
+                      <Legend 
+                        wrapperStyle={{ fontSize: '10px', marginTop: '10px' }}
                       />
+                      {Object.keys(results.chartData[0])
+                        .filter(k => 
+                          k !== 'year' && 
+                          k !== 'age' && 
+                          k !== 'name' && 
+                          k !== 'label' && 
+                          typeof results.chartData[0][k] === 'number'
+                        )
+                        .map((key, idx) => {
+                          const colors = [
+                            { stroke: '#10b981', fill: '#10b981' }, // emerald
+                            { stroke: '#f59e0b', fill: '#f59e0b' }, // amber
+                            { stroke: '#3b82f6', fill: '#3b82f6' }, // blue
+                            { stroke: '#ec4899', fill: '#ec4899' }, // pink
+                          ];
+                          const color = colors[idx % colors.length];
+                          const friendlyName = key
+                            .replace(/([A-Z])/g, ' $1')
+                            .trim()
+                            .replace(/^\w/, (c) => c.toUpperCase());
+                          return (
+                            <Area
+                              key={key}
+                              type="monotone"
+                              dataKey={key}
+                              name={friendlyName}
+                              stroke={color.stroke}
+                              strokeWidth={2}
+                              fillOpacity={0.06}
+                              fill={color.fill}
+                            />
+                          );
+                        })
+                      }
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>

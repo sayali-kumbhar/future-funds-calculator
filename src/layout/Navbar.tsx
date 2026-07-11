@@ -49,7 +49,7 @@ export default function Navbar({
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-4 lg:space-x-6">
+        <nav className="hidden lg:flex items-center space-x-2 xl:space-x-4 shrink-0">
           {navItems.map((item) => {
             const path = item.page === 'home' ? '/' : `/${item.page}`;
             return (
@@ -76,27 +76,34 @@ export default function Navbar({
         </nav>
 
         {/* Utilities: Selectors, Theme & CTA */}
-        <div className="hidden md:flex items-center space-x-2 lg:space-x-3">
+        <div className="hidden lg:flex items-center space-x-1.5 xl:space-x-2.5 shrink-0">
           
           {/* Country Selector */}
-          <div className="hidden xl:flex items-center space-x-1 bg-gray-50 dark:bg-gray-900 px-2.5 py-1.5 rounded-xl border border-gray-200 dark:border-gray-800">
+          <div className="hidden xl:flex items-center space-x-1 bg-gray-50 dark:bg-gray-900 px-2.5 py-1.5 rounded-xl border border-gray-200 dark:border-gray-800 shrink-0">
             <Globe className="h-3.5 w-3.5 text-gray-400 shrink-0" />
             <select
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              className="bg-transparent text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none border-none pr-1.5 cursor-pointer"
+              className="bg-transparent text-xs font-bold text-gray-700 dark:text-gray-300 focus:outline-none border-none pr-1.5 cursor-pointer max-w-[120px]"
               title="Select region"
             >
-              {SUPPORTED_COUNTRIES.map((c) => (
-                <option key={c.code} value={c.code} className="dark:bg-gray-950 font-sans font-semibold">
-                  {c.flag} {c.name}
-                </option>
-              ))}
+              {SUPPORTED_COUNTRIES.map((c) => {
+                let shortName = c.name;
+                if (c.code === 'GLOBAL') shortName = 'Global';
+                else if (c.code === 'US') shortName = 'USA';
+                else if (c.code === 'GB') shortName = 'UK';
+                else if (c.code === 'AE') shortName = 'UAE';
+                return (
+                  <option key={c.code} value={c.code} className="dark:bg-gray-950 font-sans font-semibold">
+                    {c.flag} {shortName}
+                  </option>
+                );
+              })}
             </select>
           </div>
 
           {/* Currency Selector */}
-          <div className="hidden xl:flex items-center space-x-1 bg-gray-50 dark:bg-gray-900 px-2.5 py-1.5 rounded-xl border border-gray-200 dark:border-gray-800">
+          <div className="hidden xl:flex items-center space-x-1 bg-gray-50 dark:bg-gray-900 px-2.5 py-1.5 rounded-xl border border-gray-200 dark:border-gray-800 shrink-0">
             <Coins className="h-3.5 w-3.5 text-gray-400 shrink-0" />
             <select
               value={currency}
@@ -106,7 +113,7 @@ export default function Navbar({
             >
               {Object.keys(SUPPORTED_CURRENCIES).map((code) => (
                 <option key={code} value={code} className="dark:bg-gray-950 font-sans font-semibold">
-                  {SUPPORTED_CURRENCIES[code].symbol} {code} ({SUPPORTED_CURRENCIES[code].label})
+                  {SUPPORTED_CURRENCIES[code].symbol} {code}
                 </option>
               ))}
             </select>
@@ -116,7 +123,7 @@ export default function Navbar({
           <button
             id="theme-toggle"
             onClick={() => setDarkMode(!darkMode)}
-            className="rounded-xl p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+            className="rounded-xl p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shrink-0"
             aria-label="Toggle theme mode"
           >
             {darkMode ? <Sun className="h-4.5 w-4.5 text-amber-500" /> : <Moon className="h-4.5 w-4.5 text-slate-700" />}
@@ -127,15 +134,15 @@ export default function Navbar({
             id="navbar-cta"
             to="/ai-blueprint"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="flex items-center space-x-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition-all hover:shadow-emerald-500/15 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+            className="flex items-center space-x-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 px-3.5 py-2 text-xs font-bold text-white shadow-sm transition-all hover:shadow-emerald-500/15 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shrink-0 whitespace-nowrap"
           >
-            <Sparkles className="h-3.5 w-3.5 text-emerald-300" />
-            <span>AI Blueprint</span>
+            <Sparkles className="h-3.5 w-3.5 text-emerald-300 shrink-0" />
+            <span className="shrink-0">AI Blueprint</span>
           </Link>
         </div>
 
         {/* Mobile controls */}
-        <div className="flex md:hidden items-center space-x-1.5">
+        <div className="flex lg:hidden items-center space-x-1.5">
           <button
             id="theme-toggle-mobile"
             onClick={() => setDarkMode(!darkMode)}
@@ -158,7 +165,7 @@ export default function Navbar({
       </div>
 
       {/* Scrollable Horizontal Navigation for Mobile View */}
-      <div className="md:hidden border-t border-gray-150 dark:border-gray-900 bg-white/90 dark:bg-gray-950/90 overflow-x-auto whitespace-nowrap scrollbar-custom-nav flex items-center py-2 px-4 space-x-5">
+      <div className="lg:hidden border-t border-gray-150 dark:border-gray-900 bg-white/90 dark:bg-gray-950/90 overflow-x-auto whitespace-nowrap scrollbar-custom-nav flex items-center py-2 px-4 space-x-5">
         {navItems.map((item) => {
           const path = item.page === 'home' ? '/' : `/${item.page}`;
           return (
@@ -186,7 +193,7 @@ export default function Navbar({
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-4 py-4 space-y-4">
+        <div className="lg:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-4 py-4 space-y-4">
           
           <div className="grid grid-cols-2 gap-2">
             {/* Mobile Country selector */}
