@@ -1,12 +1,14 @@
 import { Page } from '../types';
-import { ShieldCheck, Scale, Info, FileText, CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ShieldCheck, Scale, Info, FileText } from 'lucide-react';
 
 interface LegalPageProps {
   currentPage: Page;
-  setCurrentPage: (page: Page) => void;
+  setCurrentPage?: (page: Page) => void;
 }
 
-export default function LegalPage({ currentPage, setCurrentPage }: LegalPageProps) {
+export default function LegalPage({ currentPage }: LegalPageProps) {
+  const navigate = useNavigate();
   // Navigation tabs
   const tabs = [
     { key: 'privacy' as Page, label: 'Privacy Policy', icon: ShieldCheck },
@@ -16,7 +18,7 @@ export default function LegalPage({ currentPage, setCurrentPage }: LegalPageProp
   ];
 
   const handleTabChange = (page: Page) => {
-    setCurrentPage(page);
+    navigate(`/${page}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

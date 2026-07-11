@@ -1,14 +1,16 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Page } from '../types';
-import { Map, Download, Copy, Globe, Link2, BookOpen, Check } from 'lucide-react';
+import { Map, Download, Copy, Globe, Link2, Check } from 'lucide-react';
 
 interface SitemapPageProps {
-  setCurrentPage: (page: Page) => void;
-  setSelectedPostSlug: (slug: string | null) => void;
+  setCurrentPage?: (page: Page) => void;
+  setSelectedPostSlug?: (slug: string | null) => void;
 }
 
-export default function SitemapPage({ setCurrentPage, setSelectedPostSlug }: SitemapPageProps) {
+export default function SitemapPage({}: SitemapPageProps) {
   const [copied, setCopied] = useState(false);
+  const navigate = useNavigate();
 
   // XML content
   const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -73,8 +75,8 @@ export default function SitemapPage({ setCurrentPage, setSelectedPostSlug }: Sit
 </urlset>`;
 
   const handleNav = (page: Page) => {
-    setCurrentPage(page);
-    setSelectedPostSlug(null);
+    const path = page === 'home' ? '/' : `/${page}`;
+    navigate(path);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

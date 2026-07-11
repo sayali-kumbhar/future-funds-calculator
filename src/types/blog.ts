@@ -19,6 +19,7 @@ export interface BlogPost {
   metaDescription?: string;
   searchIntent?: string;
   faqs?: { question: string; answer: string }[];
+  tags?: string[];
 }
 
 export interface FAQItem {

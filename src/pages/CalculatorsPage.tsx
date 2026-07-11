@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { CALCULATORS_LIST, CalculatorConfig } from '../data/calculatorsData';
 import { SUPPORTED_CURRENCIES } from '../data/currenciesData';
+import { generateCalculatorPDF } from '../utils/pdfExport';
 import {
   Sparkles,
   HelpCircle,
@@ -32,46 +34,190 @@ import {
 } from 'recharts';
 
 export default function CalculatorsPage() {
+  const { slug } = useParams<{ slug?: string }>();
+  const navigate = useNavigate();
+  const activeSlug = slug || 'financial-freedom';
+
+  const setSelectedCalculatorSlug = (newSlug: string) => {
+    navigate(`/calculators/${newSlug}`);
+  };
+
   const {
-    selectedCalculatorSlug,
-    setSelectedCalculatorSlug,
     currency,
+    setCurrency,
     formatCurrency,
   } = useApp();
 
   const [activeTab, setActiveTab] = useState<'all' | 'fire' | 'retirement' | 'investing' | 'loans_debt' | 'savings_budget'>('all');
   const [inputs, setInputs] = useState<Record<string, any>>({});
   const [copied, setCopied] = useState(false);
+  const [copiedResults, setCopiedResults] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
-  // Default to first calculator if none selected
-  const activeSlug = selectedCalculatorSlug || 'financial-freedom';
   const calculator = CALCULATORS_LIST.find((c) => c.slug === activeSlug) || CALCULATORS_LIST[0];
 
-  // Reset inputs when selected calculator changes
+  // Dynamic Schema.org injection
+  useEffect(() => {
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": calculator.name,
+      "description": calculator.metaDesc,
+      "url": window.location.href,
+      "applicationCategory": "FinancialApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript",
+      "featureList": [
+        "Interactive calculations",
+        "Visual chart projections",
+        "PDF report exports",
+        "Result summary copying"
+      ],
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    };
+
+    let faqSchema: any = null;
+    if (calculator.faqs && calculator.faqs.length > 0) {
+      faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": calculator.faqs.map(faq => ({
+          "@type": "Question",
+          "name": faq.question,
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": faq.answer
+          }
+        }))
+      };
+    }
+
+    const scriptId = 'calculator-jsonld';
+    let scriptTag = document.getElementById(scriptId) as HTMLScriptElement;
+    if (!scriptTag) {
+      scriptTag = document.createElement('script');
+      scriptTag.id = scriptId;
+      scriptTag.type = 'application/ld+json';
+      document.head.appendChild(scriptTag);
+    }
+    scriptTag.text = JSON.stringify([schema, ...(faqSchema ? [faqSchema] : [])]);
+
+    return () => {
+      const tag = document.getElementById(scriptId);
+      if (tag) tag.remove();
+    };
+  }, [calculator]);
+
+  // Load state from query parameters on calculator switch
   useEffect(() => {
     const defaultInputs: Record<string, any> = {};
+    const searchParams = new URLSearchParams(window.location.search);
+    
     calculator.fields.forEach((field) => {
-      defaultInputs[field.key] = field.defaultValue;
+      const queryVal = searchParams.get(field.key);
+      if (queryVal !== null) {
+        if (field.type === 'number') {
+          defaultInputs[field.key] = parseFloat(queryVal) || field.defaultValue;
+        } else {
+          defaultInputs[field.key] = queryVal;
+        }
+      } else {
+        defaultInputs[field.key] = field.defaultValue;
+      }
     });
     setInputs(defaultInputs);
+    setValidationErrors({});
   }, [activeSlug]);
 
   const handleInputChange = (key: string, val: any) => {
     setInputs((prev) => ({ ...prev, [key]: val }));
+    
+    // Perform dynamic real-time field validation
+    const field = calculator.fields.find(f => f.key === key);
+    if (field && field.type === 'number') {
+      const numVal = parseFloat(val);
+      if (isNaN(numVal)) {
+        setValidationErrors(prev => ({ ...prev, [key]: 'Value must be a valid number' }));
+      } else if (field.min !== undefined && numVal < field.min) {
+        setValidationErrors(prev => ({ ...prev, [key]: `Minimum allowed is ${field.min}` }));
+      } else if (field.max !== undefined && numVal > field.max) {
+        setValidationErrors(prev => ({ ...prev, [key]: `Maximum allowed is ${field.max}` }));
+      } else {
+        setValidationErrors(prev => {
+          const updated = { ...prev };
+          delete updated[key];
+          return updated;
+        });
+      }
+    }
   };
 
   const results = calculator.calculate(inputs, currency);
 
   const handleShare = () => {
-    const text = `I am using the FutureFund ${calculator.name}! Try it out here:`;
-    const url = window.location.href;
+    const searchParams = new URLSearchParams();
+    Object.entries(inputs).forEach(([key, val]) => {
+      searchParams.set(key, String(val));
+    });
+    const url = `${window.location.origin}${window.location.pathname}?${searchParams.toString()}`;
+    const text = `Check out my financial model on FutureFund ${calculator.name}! Try it here:`;
+    
     if (navigator.share) {
       navigator.share({ title: calculator.name, text, url }).catch(console.error);
     } else {
-      navigator.clipboard.writeText(`${text} ${url}`);
+      navigator.clipboard.writeText(`${text}\n${url}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
+  };
+
+  const handleCopyResults = () => {
+    const lines = [
+      `=== FutureFund Financial Report ===`,
+      `Calculator: ${calculator.name}`,
+      `Description: ${calculator.metaDesc}`,
+      ``,
+      `--- Inputs ---`,
+    ];
+    
+    calculator.fields.forEach(field => {
+      const val = inputs[field.key];
+      let displayVal = val;
+      if (field.isCurrency) {
+        const symbol = SUPPORTED_CURRENCIES[currency]?.symbol || '$';
+        displayVal = `${symbol}${Number(val).toLocaleString()}`;
+      } else if (field.isPercent) {
+        displayVal = `${val}%`;
+      }
+      lines.push(`${field.label}: ${displayVal}`);
+    });
+    
+    lines.push(``);
+    lines.push(`--- Calculated Results ---`);
+    results.metrics.forEach(m => {
+      let displayVal = m.value;
+      if (typeof m.value === 'number') {
+        const symbol = SUPPORTED_CURRENCIES[currency]?.symbol || '$';
+        displayVal = `${symbol}${m.value.toLocaleString()}`;
+      }
+      lines.push(`${m.label}: ${displayVal} (${m.desc || ''})`);
+    });
+    
+    if (results.explanationText) {
+      lines.push(``);
+      lines.push(`Summary: ${results.explanationText}`);
+    }
+    
+    lines.push(``);
+    lines.push(`Calculate yours at: ${window.location.href}`);
+    
+    navigator.clipboard.writeText(lines.join('\n'));
+    setCopiedResults(true);
+    setTimeout(() => setCopiedResults(false), 2000);
   };
 
   // Group calculators by categories
@@ -89,10 +235,16 @@ export default function CalculatorsPage() {
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 bg-white dark:bg-gray-950 transition-colors">
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 bg-white dark:bg-gray-950 transition-colors print:p-0 print:bg-white print:text-black">
       
+      {/* Printable Report Header */}
+      <div className="hidden print:block border-b-2 border-emerald-500 pb-4 mb-8">
+        <h1 className="text-2xl font-extrabold text-gray-900">FutureFund Financial Report</h1>
+        <p className="text-xs text-gray-500 mt-1">Generated on {new Date().toLocaleDateString()} | Tool: {calculator.name} | Active Currency: {currency}</p>
+      </div>
+
       {/* 1. Header with Breadcrumbs & Title */}
-      <div className="space-y-4 mb-8">
+      <div className="space-y-4 mb-8 print:hidden">
         <div className="flex items-center space-x-2 text-xs text-gray-400 font-mono">
           <span className="cursor-pointer hover:text-emerald-500" onClick={() => setSelectedCalculatorSlug('financial-freedom')}>Home</span>
           <ChevronRight className="h-3 w-3" />
@@ -112,10 +264,10 @@ export default function CalculatorsPage() {
       </div>
 
       {/* 2. Interactive Calculator Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 print:block">
         
         {/* Sidebar Selector: Left Columns */}
-        <div className="lg:col-span-3 space-y-6">
+        <div className="lg:col-span-3 space-y-6 print:hidden">
           <div className="bg-gray-50 dark:bg-gray-900/30 border border-gray-150 dark:border-gray-900 rounded-2xl p-4">
             <h3 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3 px-2">
               Categories
@@ -159,16 +311,68 @@ export default function CalculatorsPage() {
         </div>
 
         {/* Input Panel & Outputs: Center Columns */}
-        <div className="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 gap-8">
+        <div className="lg:col-span-9 grid grid-cols-1 md:grid-cols-12 gap-8 print:block print:w-full">
           
           {/* Inputs Section */}
-          <div className="md:col-span-5 bg-gray-50 dark:bg-gray-900/40 border border-gray-150 dark:border-gray-900 rounded-3xl p-6 sm:p-8 space-y-6 self-start">
+          <div className="md:col-span-5 bg-gray-50 dark:bg-gray-900/40 border border-gray-150 dark:border-gray-900 rounded-3xl p-6 sm:p-8 space-y-6 self-start print:bg-transparent print:border-none print:p-0 print:mb-8 print:shadow-none">
             <div>
               <h3 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <Calculator className="h-5 w-5 text-emerald-500" />
                 Calculator Inputs
               </h3>
               <p className="text-xs text-gray-400 mt-1">Adjust parameters below to see results change instantly.</p>
+            </div>
+
+            {/* Currency Option Toggle */}
+            <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 space-y-3 print:hidden shadow-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider font-mono">
+                  Display Currency
+                </span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/10">
+                  Active: {currency} ({SUPPORTED_CURRENCIES[currency]?.symbol || '$'})
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCurrency('USD')}
+                  className={`flex items-center justify-center space-x-1.5 py-2.5 px-3 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+                    currency === 'USD'
+                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm shadow-emerald-500/10'
+                      : 'bg-transparent text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900'
+                  }`}
+                >
+                  <span className="text-sm">🇺🇸</span>
+                  <span>USD ($)</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCurrency('INR')}
+                  className={`flex items-center justify-center space-x-1.5 py-2.5 px-3 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+                    currency === 'INR'
+                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm shadow-emerald-500/10'
+                      : 'bg-transparent text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900'
+                  }`}
+                >
+                  <span className="text-sm">🇮🇳</span>
+                  <span>INR (₹ / Rs)</span>
+                </button>
+              </div>
+              <div className="pt-2.5 border-t border-gray-100 dark:border-gray-900/60 flex items-center justify-between">
+                <span className="text-[10px] font-semibold text-gray-400 dark:text-gray-500">Other world currencies:</span>
+                <select
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value)}
+                  className="bg-transparent text-xs font-bold text-gray-600 dark:text-gray-400 focus:outline-none border-none cursor-pointer hover:text-emerald-600 transition-colors"
+                >
+                  {Object.entries(SUPPORTED_CURRENCIES).map(([code, config]) => (
+                    <option key={code} value={code} className="dark:bg-gray-950 text-xs">
+                      {config.symbol} {code} ({config.label})
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -191,27 +395,34 @@ export default function CalculatorsPage() {
                       ))}
                     </select>
                   ) : (
-                    <div className="relative">
-                      {field.isCurrency && (
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 font-bold text-xs">
-                          {SUPPORTED_CURRENCIES[currency]?.symbol || '$'}
-                        </div>
-                      )}
-                      <input
-                        type="number"
-                        min={field.min}
-                        max={field.max}
-                        step={field.step || 'any'}
-                        value={inputs[field.key] ?? ''}
-                        onChange={(e) => handleInputChange(field.key, parseFloat(e.target.value) || 0)}
-                        className={`w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl py-2.5 text-sm font-semibold text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
-                          field.isCurrency ? 'pl-8 pr-3.5' : 'px-3.5'
-                        }`}
-                      />
-                      {field.isPercent && (
-                        <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-gray-400 font-bold text-xs">
-                          %
-                        </div>
+                    <div>
+                      <div className="relative">
+                        {field.isCurrency && (
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 font-bold text-xs">
+                            {SUPPORTED_CURRENCIES[currency]?.symbol || '$'}
+                          </div>
+                        )}
+                        <input
+                          type="number"
+                          min={field.min}
+                          max={field.max}
+                          step={field.step || 'any'}
+                          value={inputs[field.key] ?? ''}
+                          onChange={(e) => handleInputChange(field.key, parseFloat(e.target.value) || 0)}
+                          className={`w-full bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl py-2.5 text-sm font-semibold text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 ${
+                            field.isCurrency ? 'pl-8 pr-3.5' : 'px-3.5'
+                          } ${validationErrors[field.key] ? 'border-red-500 ring-red-500 focus:ring-red-500' : ''}`}
+                        />
+                        {field.isPercent && (
+                          <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-gray-400 font-bold text-xs">
+                            %
+                          </div>
+                        )}
+                      </div>
+                      {validationErrors[field.key] && (
+                        <p className="text-[10px] text-red-500 font-bold mt-1 transition-all">
+                          {validationErrors[field.key]}
+                        </p>
                       )}
                     </div>
                   )}
@@ -237,28 +448,75 @@ export default function CalculatorsPage() {
           {/* Outputs Section */}
           <div className="md:col-span-7 space-y-6">
             
+            {/* Output Actions Toolbar */}
+            <div className="flex items-center justify-between border-b border-gray-150 dark:border-gray-850 pb-4 print:hidden">
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-emerald-500" />
+                Calculation Results
+              </h3>
+              <div className="flex items-center space-x-1.5">
+                {/* Copy Results Button */}
+                <button
+                  onClick={handleCopyResults}
+                  className="p-2 text-gray-500 hover:text-emerald-500 dark:text-gray-400 dark:hover:text-emerald-400 rounded-xl bg-gray-50 hover:bg-gray-100 dark:bg-gray-900/40 dark:hover:bg-gray-900 border border-gray-150 dark:border-gray-800 transition-all text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+                  title="Copy results to clipboard"
+                >
+                  {copiedResults ? (
+                    <CheckCircle className="h-3.5 w-3.5 text-emerald-500" />
+                  ) : (
+                    <Sparkles className="h-3.5 w-3.5" />
+                  )}
+                  <span>{copiedResults ? 'Copied!' : 'Copy Results'}</span>
+                </button>
+
+                {/* Print/PDF Button */}
+                <button
+                  onClick={() => generateCalculatorPDF({ calculator, inputs, results, currency })}
+                  className="p-2 text-gray-500 hover:text-emerald-500 dark:text-gray-400 dark:hover:text-emerald-400 rounded-xl bg-gray-50 hover:bg-gray-100 dark:bg-gray-900/40 dark:hover:bg-gray-900 border border-gray-150 dark:border-gray-800 transition-all text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+                  title="Export results to PDF"
+                >
+                  <Printer className="h-3.5 w-3.5" />
+                  <span>PDF Export</span>
+                </button>
+
+                {/* Share Button */}
+                <button
+                  onClick={handleShare}
+                  className="p-2 text-gray-500 hover:text-emerald-500 dark:text-gray-400 dark:hover:text-emerald-400 rounded-xl bg-gray-50 hover:bg-gray-100 dark:bg-gray-900/40 dark:hover:bg-gray-900 border border-gray-150 dark:border-gray-800 transition-all text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+                  title="Share stateful URL link"
+                >
+                  {copied ? (
+                    <CheckCircle className="h-3.5 w-3.5 text-emerald-500" />
+                  ) : (
+                    <Share2 className="h-3.5 w-3.5" />
+                  )}
+                  <span>{copied ? 'Copied Link!' : 'Share'}</span>
+                </button>
+              </div>
+            </div>
+
             {/* Primary KPI Metrics Row */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 print:grid-cols-3 print:gap-2">
               {results.metrics.map((metric, idx) => (
                 <div
                   key={idx}
-                  className={`bg-white dark:bg-gray-900 border p-5 rounded-2xl flex flex-col justify-between shadow-sm transition-all ${
+                  className={`bg-white dark:bg-gray-900 border p-5 rounded-2xl flex flex-col justify-between shadow-sm transition-all print:border-gray-300 print:bg-transparent print:shadow-none ${
                     metric.isPrimary
                       ? 'border-emerald-500/30 bg-emerald-50/10 dark:bg-emerald-950/10'
                       : 'border-gray-150 dark:border-gray-850'
                   }`}
                 >
-                  <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block">
+                  <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block print:text-gray-700">
                     {metric.label}
                   </span>
                   <div className="my-2.5">
                     <span className={`text-xl sm:text-2xl font-extrabold block truncate ${
-                      metric.isPrimary ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-900 dark:text-white'
+                      metric.isPrimary ? 'text-emerald-600 dark:text-emerald-400 print:text-emerald-700' : 'text-gray-900 dark:text-white print:text-black'
                     }`}>
                       {typeof metric.value === 'number' ? formatCurrency(metric.value) : metric.value}
                     </span>
                   </div>
-                  <span className="text-[9px] text-gray-400 dark:text-gray-500 block leading-normal">
+                  <span className="text-[9px] text-gray-400 dark:text-gray-500 block leading-normal print:text-gray-600">
                     {metric.desc}
                   </span>
                 </div>
@@ -267,22 +525,13 @@ export default function CalculatorsPage() {
 
             {/* Area Chart visualization if available */}
             {results.chartData && results.chartData.length > 0 && (
-              <div className="bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-850 rounded-3xl p-6 shadow-sm">
+              <div className="bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-850 rounded-3xl p-6 shadow-sm print:hidden">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
                       Visual Projection Model
                     </h4>
                     <p className="text-xs text-gray-500 mt-0.5">Compounded trends based on active settings.</p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={handleShare}
-                      className="p-1.5 text-gray-400 hover:text-emerald-500 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
-                      title="Share results"
-                    >
-                      <Share2 className="h-4 w-4" />
-                    </button>
                   </div>
                 </div>
 
@@ -351,7 +600,7 @@ export default function CalculatorsPage() {
       </div>
 
       {/* 3. Deep Educational Section: Formula, Explanation, Example */}
-      <section className="mt-16 border-t border-gray-150 dark:border-gray-900 pt-12 space-y-10">
+      <section className="mt-16 border-t border-gray-150 dark:border-gray-900 pt-12 space-y-10 print:hidden">
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           

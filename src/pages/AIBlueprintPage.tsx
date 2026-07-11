@@ -1,7 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import { useApp } from '../context/AppContext';
 import { SUPPORTED_CURRENCIES } from '../data/currenciesData';
-import { generateClientBlueprint } from '../utils/blueprintGenerator';
+import { generateClientBlueprint, BlueprintResult } from '../services/blueprintService';
 import {
   Sparkles,
   HelpCircle,
@@ -20,24 +20,6 @@ import {
   Briefcase,
   Layers,
 } from 'lucide-react';
-
-interface BlueprintResult {
-  title: string;
-  summary: string;
-  milestones: Array<{
-    timeframe: string;
-    title: string;
-    tasks: string[];
-    focus: string;
-  }>;
-  investmentAllocation: {
-    equities: number;
-    fixedIncome: number;
-    cashOrEmergency: number;
-    description: string;
-  };
-  actionableSteps: string[];
-}
 
 export default function AIBlueprintPage() {
   const { currency, formatCurrency } = useApp();

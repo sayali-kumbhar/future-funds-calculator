@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Search,
   BookOpen,
@@ -27,9 +28,9 @@ import { blogData as initialBlogData } from '../data/blogData';
 import { BlogPost, Page } from '../types';
 
 interface BlogPageProps {
-  selectedPostSlug: string | null;
-  setSelectedPostSlug: (slug: string | null) => void;
-  setCurrentPage: (page: Page | 'calculators' | 'ai-blueprint') => void;
+  selectedPostSlug?: string | null;
+  setSelectedPostSlug?: (slug: string | null) => void;
+  setCurrentPage?: (page: Page | 'calculators' | 'ai-blueprint') => void;
 }
 
 const LOADER_QUOTES = [
@@ -41,11 +42,24 @@ const LOADER_QUOTES = [
   "Structuring systematic investment plans (SIP) for compounding..."
 ];
 
-export default function BlogPage({
-  selectedPostSlug,
-  setSelectedPostSlug,
-  setCurrentPage,
-}: BlogPageProps) {
+export default function BlogPage({}: BlogPageProps) {
+  const { slug } = useParams<{ slug?: string }>();
+  const navigate = useNavigate();
+  const selectedPostSlug = slug || null;
+
+  const setSelectedPostSlug = (newSlug: string | null) => {
+    if (newSlug) {
+      navigate(`/blog/${newSlug}`);
+    } else {
+      navigate('/blog');
+    }
+  };
+
+  const setCurrentPage = (page: Page | 'calculators' | 'ai-blueprint') => {
+    const path = page === 'home' ? '/' : `/${page}`;
+    navigate(path);
+  };
+
   const [blogs, setBlogs] = useState<BlogPost[]>(initialBlogData);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -60,6 +74,12 @@ export default function BlogPage({
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [scrollPercentage, setScrollPercentage] = useState(0);
+  const [currentPageNum, setCurrentPageNum] = useState(1);
+
+  // Reset page number on search or category shift
+  useEffect(() => {
+    setCurrentPageNum(1);
+  }, [searchTerm, selectedCategory]);
 
   // Monitor Scroll Percentage for Reading Progress Bar
   useEffect(() => {
@@ -230,10 +250,20 @@ export default function BlogPage({
       const matchesSearch =
         post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         post.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (post.primaryKeyword && post.primaryKeyword.toLowerCase().includes(searchTerm.toLowerCase()));
+        (post.primaryKeyword && post.primaryKeyword.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (post.tags && post.tags.some(t => t.toLowerCase().includes(searchTerm.toLowerCase())));
       return matchesCategory && matchesSearch;
     });
   }, [blogs, selectedCategory, searchTerm]);
+
+  // Paginated Posts
+  const POSTS_PER_PAGE = 12;
+  const paginatedPosts = useMemo(() => {
+    const startIndex = (currentPageNum - 1) * POSTS_PER_PAGE;
+    return filteredPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+  }, [filteredPosts, currentPageNum]);
+
+  const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
 
   // Related Articles matching slugs
   const relatedPosts = useMemo(() => {
@@ -363,49 +393,6 @@ export default function BlogPage({
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
-          {/* Quick Navigation Hub */}
-          <div className="bg-gray-50/70 dark:bg-gray-900/40 border border-gray-150/60 dark:border-gray-800/80 rounded-2xl p-4 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                <BookOpen className="h-4.5 w-4.5" />
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider font-mono">You are in: Article Reader</p>
-                <p className="text-sm font-extrabold text-gray-900 dark:text-white">FutureFund Knowledge Base</p>
-              </div>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                onClick={() => { setCurrentPage('home'); setSelectedPostSlug(null); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-white dark:bg-gray-950 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-xs font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 border border-gray-200 dark:border-gray-800 transition-colors cursor-pointer"
-              >
-                <Home className="h-3.5 w-3.5" />
-                <span>Back to Planner</span>
-              </button>
-              <button
-                onClick={() => { setCurrentPage('calculators'); setSelectedPostSlug(null); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-white dark:bg-gray-950 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-xs font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 border border-gray-200 dark:border-gray-800 transition-colors cursor-pointer"
-              >
-                <Calculator className="h-3.5 w-3.5 animate-pulse" />
-                <span>30+ Calculators</span>
-              </button>
-              <button
-                onClick={() => { setCurrentPage('ai-blueprint'); setSelectedPostSlug(null); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-white dark:bg-gray-950 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-xs font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 border border-gray-200 dark:border-gray-800 transition-colors cursor-pointer"
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>AI Roadmap</span>
-              </button>
-              <button
-                onClick={() => { setCurrentPage('faq'); setSelectedPostSlug(null); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-white dark:bg-gray-950 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-xs font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 border border-gray-200 dark:border-gray-800 transition-colors cursor-pointer"
-              >
-                <HelpCircle className="h-3.5 w-3.5" />
-                <span>FAQs</span>
-              </button>
-            </div>
-          </div>
-
           {/* Back button */}
           <button
             onClick={() => { setSelectedPostSlug(null); window.scrollTo({ top: 0 }); }}
@@ -580,6 +567,26 @@ export default function BlogPage({
                   </section>
                 ))}
               </div>
+
+              {/* Tags Section */}
+              {activePost.tags && activePost.tags.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2 pt-6 border-t border-gray-100 dark:border-gray-900">
+                  <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mr-2">Tags:</span>
+                  {activePost.tags.map((tag) => (
+                    <button
+                      key={tag}
+                      onClick={() => {
+                        setSearchTerm(tag);
+                        setSelectedPostSlug(null);
+                        window.scrollTo({ top: 0 });
+                      }}
+                      className="px-2.5 py-1 rounded-lg bg-gray-50 hover:bg-emerald-50 dark:bg-gray-900 dark:hover:bg-emerald-950/40 text-gray-600 hover:text-emerald-600 dark:text-gray-400 dark:hover:text-emerald-400 border border-gray-200 dark:border-gray-800 transition-colors text-xs font-semibold cursor-pointer"
+                    >
+                      #{tag}
+                    </button>
+                  ))}
+                </div>
+              )}
 
               {/* Dynamic FAQ Accordion Section (Semantic SEO FAQ Schema representation) */}
               {activePost.faqs && activePost.faqs.length > 0 && (
@@ -817,49 +824,6 @@ export default function BlogPage({
     <main id="blog-archive" className="py-16 bg-white dark:bg-gray-950 transition-colors">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
         
-        {/* Quick Navigation Hub */}
-        <div className="bg-gray-50/70 dark:bg-gray-900/40 border border-gray-150/60 dark:border-gray-800/80 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-              <BookOpen className="h-4.5 w-4.5" />
-            </div>
-            <div>
-              <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider font-mono">You are in: Finance Insights</p>
-              <p className="text-sm font-extrabold text-gray-900 dark:text-white">FutureFund Knowledge Base</p>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => { setCurrentPage('home'); setSelectedPostSlug(null); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-white dark:bg-gray-950 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-xs font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 border border-gray-200 dark:border-gray-800 transition-colors cursor-pointer"
-            >
-              <Home className="h-3.5 w-3.5" />
-              <span>Back to Planner</span>
-            </button>
-            <button
-              onClick={() => { setCurrentPage('calculators'); setSelectedPostSlug(null); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-white dark:bg-gray-950 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-xs font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 border border-gray-200 dark:border-gray-800 transition-colors cursor-pointer"
-            >
-              <Calculator className="h-3.5 w-3.5 animate-pulse" />
-              <span>30+ Calculators</span>
-            </button>
-            <button
-              onClick={() => { setCurrentPage('ai-blueprint'); setSelectedPostSlug(null); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-white dark:bg-gray-950 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-xs font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 border border-gray-200 dark:border-gray-800 transition-colors cursor-pointer"
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>AI Roadmap</span>
-            </button>
-            <button
-              onClick={() => { setCurrentPage('faq'); setSelectedPostSlug(null); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-white dark:bg-gray-950 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-xs font-bold text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 border border-gray-200 dark:border-gray-800 transition-colors cursor-pointer"
-            >
-              <HelpCircle className="h-3.5 w-3.5" />
-              <span>FAQs</span>
-            </button>
-          </div>
-        </div>
-
         {/* Header Title */}
         <section className="text-center max-w-3xl mx-auto space-y-4">
           <span className="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30 uppercase tracking-widest">
@@ -909,8 +873,8 @@ export default function BlogPage({
 
         {/* Blog Posts Grid */}
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredPosts.length > 0 ? (
-            filteredPosts.map((post) => (
+          {paginatedPosts.length > 0 ? (
+            paginatedPosts.map((post) => (
               <article
                 key={post.id}
                 onClick={() => handlePostClick(post.slug)}
@@ -939,6 +903,19 @@ export default function BlogPage({
                     <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-3 leading-relaxed font-medium">
                       {post.summary}
                     </p>
+                    {/* Tags on card */}
+                    {post.tags && post.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {post.tags.slice(0, 3).map((tag) => (
+                          <span
+                            key={tag}
+                            className="inline-block text-[10px] font-semibold text-emerald-600 dark:text-emerald-400"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -961,6 +938,67 @@ export default function BlogPage({
             </div>
           )}
         </section>
+
+        {/* Pagination Section */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 pt-8 border-t border-gray-150 dark:border-gray-900">
+            <button
+              onClick={() => setCurrentPageNum(p => Math.max(1, p - 1))}
+              disabled={currentPageNum === 1}
+              className={`inline-flex items-center space-x-1 px-3 py-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${
+                currentPageNum === 1
+                  ? 'border-gray-200 dark:border-gray-800 text-gray-300 dark:text-gray-700 cursor-not-allowed'
+                  : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 hover:text-emerald-600 dark:hover:text-emerald-400'
+              }`}
+            >
+              <span>Previous</span>
+            </button>
+            <div className="flex items-center gap-1.5">
+              {Array.from({ length: totalPages }).map((_, idx) => {
+                const page = idx + 1;
+                if (totalPages > 6 && Math.abs(currentPageNum - page) > 1 && page !== 1 && page !== totalPages) {
+                  if (page === 2 && currentPageNum > 3) {
+                    return <span key="dots-1" className="text-gray-400 dark:text-gray-600 px-1 text-xs">...</span>;
+                  }
+                  if (page === totalPages - 1 && currentPageNum < totalPages - 2) {
+                    return <span key="dots-2" className="text-gray-400 dark:text-gray-600 px-1 text-xs">...</span>;
+                  }
+                  return null;
+                }
+                return (
+                  <button
+                    key={page}
+                    onClick={() => {
+                      setCurrentPageNum(page);
+                      const element = document.getElementById('blog-archive');
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className={`h-8 w-8 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      currentPageNum === page
+                        ? 'bg-emerald-600 text-white shadow-sm'
+                        : 'bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              onClick={() => setCurrentPageNum(p => Math.min(totalPages, p + 1))}
+              disabled={currentPageNum === totalPages}
+              className={`inline-flex items-center space-x-1 px-3 py-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${
+                currentPageNum === totalPages
+                  ? 'border-gray-200 dark:border-gray-800 text-gray-300 dark:text-gray-700 cursor-not-allowed'
+                  : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 hover:text-emerald-600 dark:hover:text-emerald-400'
+              }`}
+            >
+              <span>Next</span>
+            </button>
+          </div>
+        )}
 
       </div>
     </main>

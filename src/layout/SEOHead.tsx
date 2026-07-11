@@ -1,17 +1,36 @@
 import { useEffect } from 'react';
-import { Page } from '../../types';
-import { resolveMetadata, generateJsonLdSchema } from '../../utils/seo';
-import { DEFAULT_SEO } from '../../constants/seo';
+import { Page } from '../types';
+import { resolveMetadata, generateJsonLdSchema } from '../utils/seo';
+import { DEFAULT_SEO } from '../constants/seo';
 
 interface SEOHeadProps {
   page: Page;
   blogTitle?: string;
   blogSlug?: string;
+  calculatorName?: string;
+  calculatorSlug?: string;
 }
 
-export default function SEOHead({ page, blogTitle, blogSlug }: SEOHeadProps) {
+export default function SEOHead({
+  page,
+  blogTitle,
+  blogSlug,
+  calculatorName,
+  calculatorSlug
+}: SEOHeadProps) {
   useEffect(() => {
-    const { title, description, url, type } = resolveMetadata(page, blogTitle, blogSlug);
+    const origin = typeof window !== 'undefined' ? window.location.origin : DEFAULT_SEO.BASE_URL;
+    const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
+    const canonicalUrl = `${origin}${pathname}`;
+
+    const { title, description, url, type } = resolveMetadata(
+      page,
+      blogTitle,
+      blogSlug,
+      calculatorName,
+      calculatorSlug,
+      origin
+    );
 
     // Update document title
     document.title = title;
@@ -34,7 +53,7 @@ export default function SEOHead({ page, blogTitle, blogSlug }: SEOHeadProps) {
     // Open Graph Tags
     updateMetaTag('og:title', title, true);
     updateMetaTag('og:description', description, true);
-    updateMetaTag('og:url', url, true);
+    updateMetaTag('og:url', canonicalUrl, true);
     updateMetaTag('og:type', type, true);
     updateMetaTag('og:image', DEFAULT_SEO.DEFAULT_IMAGE, true);
 
@@ -51,7 +70,7 @@ export default function SEOHead({ page, blogTitle, blogSlug }: SEOHeadProps) {
       canonicalLink.setAttribute('rel', 'canonical');
       document.head.appendChild(canonicalLink);
     }
-    canonicalLink.setAttribute('href', url);
+    canonicalLink.setAttribute('href', canonicalUrl);
 
     // Structured Data (JSON-LD)
     let schemaScript = document.getElementById('jsonld-schema');
@@ -62,10 +81,18 @@ export default function SEOHead({ page, blogTitle, blogSlug }: SEOHeadProps) {
     schemaScript.id = 'jsonld-schema';
     schemaScript.setAttribute('type', 'application/ld+json');
 
-    const schemaObj = generateJsonLdSchema(page, url, blogTitle);
+    const schemaObj = generateJsonLdSchema(
+      page,
+      origin,
+      canonicalUrl,
+      blogTitle,
+      blogSlug,
+      calculatorName,
+      calculatorSlug
+    );
     schemaScript.innerHTML = JSON.stringify(schemaObj, null, 2);
     document.head.appendChild(schemaScript);
-  }, [page, blogTitle, blogSlug]);
+  }, [page, blogTitle, blogSlug, calculatorName, calculatorSlug]);
 
   return null;
 }

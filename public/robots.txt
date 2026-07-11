@@ -8,9 +8,11 @@ Allow: /about
 Allow: /blog
 Allow: /faq
 Allow: /contact
+Allow: /calculators
+Allow: /ai-blueprint
 
 Disallow: /assets/.aistudio/
 Disallow: /node_modules/
 Disallow: /dist/
 
-Sitemap: https://future-funds-calculator.vercel.app/sitemap.xml
+Sitemap: https://futurefund.io/sitemap.xml

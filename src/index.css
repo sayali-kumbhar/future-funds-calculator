@@ -37,6 +37,33 @@
 }
 
 /* Print specific styles */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Elegant horizontal scrollbar for mobile navigation */
+.scrollbar-custom-nav {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.scrollbar-custom-nav::-webkit-scrollbar {
+  height: 3px;
+}
+.scrollbar-custom-nav::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.02);
+}
+.scrollbar-custom-nav::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.45); /* emerald-500 transparent */
+  border-radius: 99px;
+}
+.scrollbar-custom-nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.85);
+}
+
 @media print {
   body {
     background: white !important;

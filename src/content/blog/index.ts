@@ -89,28 +89,82 @@ function generateProgrammaticFaqs(meta: any) {
   ];
 }
 
+function generateProgrammaticTags(meta: any): string[] {
+  const tagsSet = new Set<string>();
+  if (meta.category) {
+    tagsSet.add(meta.category);
+  }
+  if (meta.primaryKeyword) {
+    tagsSet.add(meta.primaryKeyword);
+  }
+  const cat = meta.category || '';
+  if (cat.includes('Retirement')) {
+    tagsSet.add('Retirement');
+    tagsSet.add('Pension');
+    tagsSet.add('FIRE');
+  } else if (cat.includes('Freedom')) {
+    tagsSet.add('Financial Freedom');
+    tagsSet.add('FIRE');
+    tagsSet.add('Independence');
+  } else if (cat.includes('Funds') || cat.includes('Investing') || cat.includes('Market')) {
+    tagsSet.add('Investing');
+    tagsSet.add('Wealth Creation');
+    tagsSet.add('Mutual Funds');
+  } else if (cat.includes('Savings') || cat.includes('Budgeting')) {
+    tagsSet.add('Savings');
+    tagsSet.add('Budgeting');
+    tagsSet.add('Personal Finance');
+  } else {
+    tagsSet.add('Personal Finance');
+    tagsSet.add('Wealth');
+  }
+  return Array.from(tagsSet).slice(0, 4);
+}
+
+export function calculateReadTime(sections: { heading: string; content: string }[]): string {
+  if (!sections || sections.length === 0) return '5 min read';
+  let wordCount = 0;
+  sections.forEach(s => {
+    wordCount += s.heading.split(/\s+/).length;
+    wordCount += s.content.split(/\s+/).length;
+  });
+  const minutes = Math.max(3, Math.ceil(wordCount / 200));
+  return `${minutes} min read`;
+}
+
 export const blogData: BlogPost[] = allBlogsMetadata.map((meta) => {
   const precomputed = PRECOMPUTED_CONTENT_MAP[meta.slug];
   if (precomputed) {
+    const sections = precomputed.sections;
+    const computedReadTime = precomputed.readTime || calculateReadTime(sections);
+    const tags = precomputed.tags || generateProgrammaticTags(meta);
     return {
       ...meta,
-      sections: precomputed.sections,
-      faqs: precomputed.sections ? [
+      sections,
+      faqs: meta.faqs && meta.faqs.length > 0 ? meta.faqs : [
         {
           question: `Why is the strategy for ${meta.title} important?`,
           answer: `It establishes a secure baseline, reduces cognitive fatigue, and allows compound interest to accelerate your wealth building.`
         }
-      ] : [],
-      readTime: precomputed.readTime || meta.readTime,
+      ],
+      readTime: computedReadTime,
       date: precomputed.date || meta.date,
       summary: precomputed.summary || meta.summary,
       category: precomputed.category || meta.category,
+      tags,
     } as BlogPost;
   }
+  
+  const sections = generateProgrammaticSections(meta);
+  const computedReadTime = calculateReadTime(sections);
+  const tags = generateProgrammaticTags(meta);
+  
   return {
     ...meta,
-    sections: generateProgrammaticSections(meta),
-    faqs: generateProgrammaticFaqs(meta)
+    sections,
+    faqs: generateProgrammaticFaqs(meta),
+    readTime: computedReadTime,
+    tags,
   } as BlogPost;
 });
 export const BLOG_POSTS = blogData;

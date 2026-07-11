@@ -1,12 +1,14 @@
 import { useState, FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Mail, MessageSquare, ArrowRight, CheckCircle2, Heart, Sparkles } from 'lucide-react';
 import { Page } from '../types';
 
 interface ContactPageProps {
-  setCurrentPage: (page: Page) => void;
+  setCurrentPage?: (page: Page) => void;
 }
 
-export default function ContactPage({ setCurrentPage }: ContactPageProps) {
+export default function ContactPage({}: ContactPageProps) {
+  const navigate = useNavigate();
   const [formState, setFormState] = useState({
     name: '',
     email: '',
@@ -37,7 +39,7 @@ export default function ContactPage({ setCurrentPage }: ContactPageProps) {
   };
 
   const handleFAQNav = () => {
-    setCurrentPage('faq');
+    navigate('/faq');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -73,7 +75,7 @@ export default function ContactPage({ setCurrentPage }: ContactPageProps) {
 
             <button
               onClick={handleFAQNav}
-              className="inline-flex items-center space-x-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100 border border-emerald-100 dark:border-emerald-900/30 px-5 py-3 text-sm font-bold text-emerald-700 dark:text-emerald-400 transition-colors"
+              className="inline-flex items-center space-x-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100 border border-emerald-100 dark:border-emerald-900/30 px-5 py-3 text-sm font-bold text-emerald-700 dark:text-emerald-400 transition-colors w-full justify-between"
             >
               <span>Explore 20+ Financial FAQs</span>
               <ArrowRight className="h-4 w-4" />

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import {
   Sparkles,
   RefreshCw,
@@ -27,6 +27,7 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { CalculatorInputs, WhatIfOverrides } from '../types';
+import { calculatePlan as getCalculatedPlan, calculateWhatIf as getCalculatedWhatIf } from '../services/planService';
 
 export default function CalculatorSection() {
   // Currency mode state: 'USD' | 'INR'
@@ -92,8 +93,8 @@ export default function CalculatorSection() {
 
   const currencySymbol = currency === 'USD' ? '$' : '₹';
 
-  // Format currency helpers
-  const formatCurrency = (val: number) => {
+  // Format currency helpers (Memoized with useCallback)
+  const formatCurrency = useCallback((val: number) => {
     if (val >= 10000000) {
       return currency === 'INR'
         ? `${(val / 10000000).toFixed(2)} Cr`
@@ -105,95 +106,11 @@ export default function CalculatorSection() {
         : `${(val / 1000).toFixed(0)}K`;
     }
     return `${val.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-  };
+  }, [currency]);
 
   // Math simulation engine
   const calculatePlan = (currentInputs: CalculatorInputs) => {
-    let age = currentInputs.currentAge;
-    let targetFreedomAge = currentInputs.targetAge;
-    let currentSavings = currentInputs.currentSavings;
-    let monthlyInvestment = currentInputs.monthlyInvestment;
-    let rateOfReturn = currentInputs.expectedReturn / 100;
-    let monthlyExpenses = currentInputs.monthlyExpenses;
-
-    const inflationRate = 0.055; // 5.5% average long-term inflation
-    let simulatedSavings = currentSavings;
-    let simulatedExpenses = monthlyExpenses * 12; // Annual expenses
-
-    const projectionData = [];
-    let estimatedFreedomAge = -1;
-    let estimatedWealthAtTarget = 0;
-    let finalPassiveMonthlyIncome = 0;
-
-    // Track baseline for sitemap/plot (e.g. from current age to 80)
-    const maxYears = 80 - age;
-    let activeSavings = currentSavings;
-    let activeExpenses = monthlyExpenses * 12;
-
-    for (let year = 1; year <= Math.max(maxYears, 40); year++) {
-      const yearAge = age + year;
-
-      // Compounding monthly
-      for (let month = 0; month < 12; month++) {
-        activeSavings = activeSavings * (1 + rateOfReturn / 12) + monthlyInvestment;
-      }
-
-      // Inflation inflates expenses
-      activeExpenses = activeExpenses * (1 + inflationRate);
-      const requiredTargetNestEgg = activeExpenses * 25; // 4% safe withdrawal rule
-
-      if (yearAge === targetFreedomAge) {
-        estimatedWealthAtTarget = activeSavings;
-        // 4% safe withdrawal monthly income
-        finalPassiveMonthlyIncome = (activeSavings * 0.04) / 12;
-      }
-
-      if (estimatedFreedomAge === -1 && activeSavings >= requiredTargetNestEgg) {
-        estimatedFreedomAge = yearAge;
-      }
-
-      projectionData.push({
-        age: yearAge,
-        wealth: Math.round(activeSavings),
-        requiredCorpus: Math.round(requiredTargetNestEgg),
-      });
-    }
-
-    if (estimatedFreedomAge === -1) {
-      // If not met within 80, calculate up to age 100
-      let fallbackSavings = activeSavings;
-      let fallbackExpenses = activeExpenses;
-      for (let year = Math.max(maxYears, 40) + 1; year <= 75; year++) {
-        const yearAge = age + year;
-        for (let month = 0; month < 12; month++) {
-          fallbackSavings = fallbackSavings * (1 + rateOfReturn / 12) + monthlyInvestment;
-        }
-        fallbackExpenses = fallbackExpenses * (1 + inflationRate);
-        const requiredNest = fallbackExpenses * 25;
-        if (fallbackSavings >= requiredNest) {
-          estimatedFreedomAge = yearAge;
-          break;
-        }
-      }
-    }
-
-    // Compute Independence Score (0-100)
-    // Higher savings rate, younger freedom, bigger savings relative to expenses boost score
-    const savingsRatio = monthlyInvestment / Math.max(1, currentInputs.monthlyIncome);
-    const emergencyFundFactor = Math.min(100, (currentSavings / Math.max(1, monthlyExpenses)) * 15);
-    const targetAgeFactor = Math.max(0, 100 - (estimatedFreedomAge === -1 ? 85 : estimatedFreedomAge - 20) * 1.5);
-    const score = Math.min(100, Math.round(savingsRatio * 150 + emergencyFundFactor * 0.3 + targetAgeFactor * 0.5));
-
-    const finalResults = {
-      estimatedFreedomAge: estimatedFreedomAge !== -1 ? estimatedFreedomAge : '90+',
-      yearsRemaining: estimatedFreedomAge !== -1 ? Math.max(0, estimatedFreedomAge - age) : '40+',
-      estimatedWealthAtTarget,
-      passiveMonthlyIncome: finalPassiveMonthlyIncome,
-      score,
-      chartData: projectionData,
-      requiredNestEgg: simulatedExpenses * 25,
-    };
-
+    const finalResults = getCalculatedPlan(currentInputs);
     setResults(finalResults);
     localStorage.setItem('future_fund_inputs', JSON.stringify(currentInputs));
   };
@@ -201,44 +118,12 @@ export default function CalculatorSection() {
   // What-If Dynamic computation
   const calculateWhatIf = () => {
     if (!results) return;
-
-    let age = inputs.currentAge;
-    let currentSavings = inputs.currentSavings;
-    let monthlyInvestment = inputs.monthlyInvestment + whatIf.extraMonthlyInvestment;
-    let rateOfReturn = (inputs.expectedReturn + whatIf.extraReturn) / 100;
-    let monthlyExpenses = Math.max(1000, inputs.monthlyExpenses - whatIf.reducedExpenses);
-
-    const inflationRate = 0.055;
-    let activeSavings = currentSavings;
-    let activeExpenses = monthlyExpenses * 12;
-    let simulatedWhatIfFreedomAge = -1;
-
-    for (let year = 1; year <= 75; year++) {
-      const yearAge = age + year;
-      for (let month = 0; month < 12; month++) {
-        activeSavings = activeSavings * (1 + rateOfReturn / 12) + monthlyInvestment;
-      }
-      activeExpenses = activeExpenses * (1 + inflationRate);
-      const requiredTargetNestEgg = activeExpenses * 25;
-
-      if (simulatedWhatIfFreedomAge === -1 && activeSavings >= requiredTargetNestEgg) {
-        simulatedWhatIfFreedomAge = yearAge;
-        break;
-      }
-    }
-
-    const baselineAge = typeof results.estimatedFreedomAge === 'number' ? results.estimatedFreedomAge : 90;
-    const whatIfAge = simulatedWhatIfFreedomAge !== -1 ? simulatedWhatIfFreedomAge : 90;
-    const yearsEarlier = Math.max(0, baselineAge - whatIfAge);
-
-    setWhatIfResults({
-      freedomAge: simulatedWhatIfFreedomAge !== -1 ? simulatedWhatIfFreedomAge : '90+',
-      yearsEarlier,
-    });
+    const finalWhatIfResults = getCalculatedWhatIf(inputs, whatIf, results.estimatedFreedomAge);
+    setWhatIfResults(finalWhatIfResults);
   };
 
-  // Generate customized timeline based on input goals
-  const generateBlueprint = () => {
+  // Generate customized timeline based on input goals (Memoized with useMemo)
+  const blueprint = useMemo(() => {
     if (!results) return [];
 
     const currencySymbolText = currency === 'USD' ? '$' : 'Rs.';
@@ -294,7 +179,7 @@ export default function CalculatorSection() {
     ];
 
     return stages;
-  };
+  }, [inputs, results, currency, formatCurrency]);
 
   const handleReset = () => {
     setInputs(defaultInputs);
@@ -309,7 +194,6 @@ export default function CalculatorSection() {
   };
 
   const handleCopyPlan = () => {
-    const blueprint = generateBlueprint();
     let text = `FUTUREFUND - FINANCIAL FREEDOM BLUEPRINT\n`;
     text += `=========================================\n`;
     text += `Baseline Inputs:\n`;
@@ -336,7 +220,6 @@ export default function CalculatorSection() {
   };
 
   const handleDownloadPlan = () => {
-    const blueprint = generateBlueprint();
     let text = `FUTUREFUND FINANCIAL INDEPENDENCE STRATEGY REPORT\n`;
     text += `Generated on: ${new Date().toLocaleDateString()}\n`;
     text += `-------------------------------------------------\n`;
@@ -969,13 +852,6 @@ export default function CalculatorSection() {
                       <span>Download TXT</span>
                     </button>
                     <button
-                      onClick={handlePrint}
-                      className="inline-flex items-center space-x-1.5 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-3 py-1.5 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 focus:outline-none"
-                    >
-                      <Printer className="h-3.5 w-3.5" />
-                      <span>Print Summary</span>
-                    </button>
-                    <button
                       onClick={handleShare}
                       className="inline-flex items-center space-x-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 text-xs font-semibold text-white focus:outline-none"
                     >
@@ -986,7 +862,7 @@ export default function CalculatorSection() {
                 </div>
 
                 <div className="relative border-l border-emerald-100 dark:border-emerald-900 ml-4 pl-6 space-y-6">
-                  {generateBlueprint().map((stage, i) => (
+                  {blueprint.map((stage, i) => (
                     <div key={i} className="relative">
                       {/* Timeline Dot */}
                       <span className="absolute -left-[31px] top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-950 ring-4 ring-white dark:ring-gray-950 border border-emerald-500">
