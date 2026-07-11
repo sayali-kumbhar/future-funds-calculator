@@ -530,7 +530,7 @@ export default function CalculatorSection() {
                 {/* Result Card: Freedom Age */}
                 <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-5 rounded-2xl flex flex-col justify-between shadow-sm">
                   <span className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-                    Freedom Age
+                    Realistic Freedom Age
                   </span>
                   <div className="my-2.5">
                     <span className="text-3xl font-extrabold text-gray-900 dark:text-white">
@@ -538,6 +538,9 @@ export default function CalculatorSection() {
                     </span>
                     <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 block">
                       years old
+                    </span>
+                    <span className="text-[10px] text-gray-500 dark:text-gray-400 block mt-1 leading-tight">
+                      Based on your current savings rate — not your target above
                     </span>
                   </div>
                   <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center">
@@ -605,6 +608,41 @@ export default function CalculatorSection() {
                 </div>
 
               </div>
+            )}
+
+            {results && (
+              (() => {
+                const calculatedAge = typeof results.estimatedFreedomAge === 'number' ? results.estimatedFreedomAge : 90;
+                const targetAge = inputs.targetAge;
+                if (calculatedAge > targetAge) {
+                  const yearsOff = calculatedAge - targetAge;
+                  return (
+                    <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30 rounded-2xl p-4.5 text-xs text-amber-800 dark:text-amber-400 flex items-start gap-2.5 shadow-sm transition-colors duration-150">
+                      <span className="text-sm shrink-0">⚠️</span>
+                      <div>
+                        <p className="font-semibold mb-0.5 text-amber-900 dark:text-amber-300">Target Freedom Age Gap</p>
+                        <p className="leading-relaxed text-gray-600 dark:text-gray-300">
+                          You're <strong className="text-amber-700 dark:text-amber-300 font-bold">{yearsOff} {yearsOff === 1 ? 'year' : 'years'} off</strong> your target — try the sliders below to close the gap.
+                        </p>
+                      </div>
+                    </div>
+                  );
+                } else if (calculatedAge < targetAge) {
+                  const yearsAhead = targetAge - calculatedAge;
+                  return (
+                    <div className="bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/30 rounded-2xl p-4.5 text-xs text-emerald-800 dark:text-emerald-400 flex items-start gap-2.5 shadow-sm transition-colors duration-150">
+                      <span className="text-sm shrink-0">🎉</span>
+                      <div>
+                        <p className="font-semibold mb-0.5 text-emerald-900 dark:text-emerald-300">Ahead of Target!</p>
+                        <p className="leading-relaxed text-gray-600 dark:text-gray-300">
+                          Based on your current savings rate, you are on track to achieve financial freedom <strong className="text-emerald-700 dark:text-emerald-300 font-bold">{yearsAhead} {yearsAhead === 1 ? 'year' : 'years'} earlier</strong> than your target age of {targetAge}!
+                        </p>
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              })()
             )}
 
             {/* 2. Interactive Compound Curve Chart */}
@@ -791,10 +829,13 @@ export default function CalculatorSection() {
                       {whatIfResults && (
                         <div className="space-y-2">
                           <p className="text-2xl font-extrabold text-gray-900 dark:text-white">
-                            Freedom Age:{' '}
+                            Projected Freedom Age:{' '}
                             <span className="text-emerald-600 dark:text-emerald-400">
                               {whatIfResults.freedomAge}
                             </span>
+                          </p>
+                          <p className="text-[10px] text-gray-500 dark:text-gray-400 leading-tight">
+                            Adjusted dynamically based on what-if overrides below
                           </p>
                           <p className="text-sm text-gray-600 dark:text-gray-300 leading-normal">
                             {whatIfResults.yearsEarlier > 0 ? (
