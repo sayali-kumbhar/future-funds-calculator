@@ -141,16 +141,19 @@ export const blogData: BlogPost[] = allBlogsMetadata.map((meta) => {
     return {
       ...meta,
       sections,
-      faqs: meta.faqs && meta.faqs.length > 0 ? meta.faqs : [
+      faqs: precomputed.faqs || (meta.faqs && meta.faqs.length > 0 ? meta.faqs : [
         {
           question: `Why is the strategy for ${meta.title} important?`,
           answer: `It establishes a secure baseline, reduces cognitive fatigue, and allows compound interest to accelerate your wealth building.`
         }
-      ],
+      ]),
       readTime: computedReadTime,
       date: precomputed.date || meta.date,
       summary: precomputed.summary || meta.summary,
       category: precomputed.category || meta.category,
+      primaryKeyword: precomputed.primaryKeyword || meta.primaryKeyword,
+      secondaryKeywords: precomputed.secondaryKeywords || meta.secondaryKeywords,
+      metaDescription: precomputed.metaDescription || meta.metaDescription,
       tags,
     } as BlogPost;
   }

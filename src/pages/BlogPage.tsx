@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Search,
   BookOpen,
@@ -23,6 +23,7 @@ import {
   Home,
   Calculator,
   TrendingUp,
+  X,
 } from 'lucide-react';
 import { blogData as initialBlogData } from '../data/blogData';
 import { BlogPost, Page } from '../types';
@@ -45,13 +46,49 @@ const LOADER_QUOTES = [
 export default function BlogPage({}: BlogPageProps) {
   const { slug } = useParams<{ slug?: string }>();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const selectedPostSlug = slug || null;
+
+  const urlSearchTerm = searchParams.get('search') || searchParams.get('q') || '';
+
+  const [blogs, setBlogs] = useState<BlogPost[]>(initialBlogData);
+  const [searchTerm, setSearchTerm] = useState(urlSearchTerm);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  // Sync state if URL query param changes from external action (e.g. back/forward browser buttons)
+  useEffect(() => {
+    if (urlSearchTerm !== searchTerm) {
+      setSearchTerm(urlSearchTerm);
+    }
+  }, [urlSearchTerm]);
+
+  // Debounce URL search param updates to prevent keystroke lag and layout stuttering
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (searchTerm) {
+        setSearchParams({ search: searchTerm }, { replace: true });
+      } else {
+        setSearchParams({}, { replace: true });
+      }
+    }, 400);
+
+    return () => clearTimeout(handler);
+  }, [searchTerm, setSearchParams]);
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    // Reset category to 'All' when searching to search the entire library
+    if (value && selectedCategory !== 'All') {
+      setSelectedCategory('All');
+    }
+  };
 
   const setSelectedPostSlug = (newSlug: string | null) => {
     if (newSlug) {
       navigate(`/blog/${newSlug}`);
     } else {
-      navigate('/blog');
+      const searchStr = searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : '';
+      navigate(`/blog${searchStr}`);
     }
   };
 
@@ -59,10 +96,6 @@ export default function BlogPage({}: BlogPageProps) {
     const path = page === 'home' ? '/' : `/${page}`;
     navigate(path);
   };
-
-  const [blogs, setBlogs] = useState<BlogPost[]>(initialBlogData);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   
   // Single article fetching states
   const [activePost, setActivePost] = useState<BlogPost | null>(null);
@@ -224,6 +257,50 @@ export default function BlogPage({}: BlogPageProps) {
       }
     };
 
+    // Store original title
+    const originalTitle = document.title;
+    document.title = `${activePost.title} | FutureFund Financial Insights`;
+
+    // Manage meta tags dynamically
+    const metaTags = [
+      { name: 'description', content: activePost.metaDescription || activePost.summary },
+      { name: 'keywords', content: [activePost.primaryKeyword, ...(activePost.secondaryKeywords || []), ...(activePost.tags || [])].filter(Boolean).join(', ') },
+      { property: 'og:title', content: activePost.title },
+      { property: 'og:description', content: activePost.metaDescription || activePost.summary },
+      { property: 'og:image', content: activePost.image },
+      { property: 'og:url', content: postUrl },
+      { property: 'og:type', content: 'article' },
+      { name: 'twitter:title', content: activePost.title },
+      { name: 'twitter:description', content: activePost.metaDescription || activePost.summary },
+      { name: 'twitter:image', content: activePost.image },
+      { name: 'twitter:card', content: 'summary_large_image' }
+    ];
+
+    const createdElements: { el: HTMLMetaElement; origContent?: string; isNew: boolean }[] = [];
+
+    metaTags.forEach(tag => {
+      let selector = '';
+      if ('name' in tag && tag.name) {
+        selector = `meta[name="${tag.name}"]`;
+      } else if ('property' in tag && tag.property) {
+        selector = `meta[property="${tag.property}"]`;
+      }
+
+      let el = document.querySelector(selector) as HTMLMetaElement;
+      if (el) {
+        const origContent = el.getAttribute('content') || '';
+        el.setAttribute('content', tag.content || '');
+        createdElements.push({ el, origContent, isNew: false });
+      } else {
+        const newEl = document.createElement('meta');
+        if ('name' in tag && tag.name) newEl.setAttribute('name', tag.name);
+        if ('property' in tag && tag.property) newEl.setAttribute('property', tag.property);
+        newEl.setAttribute('content', tag.content || '');
+        document.head.appendChild(newEl);
+        createdElements.push({ el: newEl, isNew: true });
+      }
+    });
+
     const script = document.createElement('script');
     script.id = 'futurefund-seo-schema';
     script.type = 'application/ld+json';
@@ -233,6 +310,15 @@ export default function BlogPage({}: BlogPageProps) {
     return () => {
       const existing = document.getElementById('futurefund-seo-schema');
       if (existing) existing.remove();
+      
+      document.title = originalTitle;
+      createdElements.forEach((item) => {
+        if (item.isNew) {
+          item.el.remove();
+        } else {
+          item.el.setAttribute('content', item.origContent || '');
+        }
+      });
     };
   }, [activePost]);
 
@@ -576,7 +662,7 @@ export default function BlogPage({}: BlogPageProps) {
                     <button
                       key={tag}
                       onClick={() => {
-                        setSearchTerm(tag);
+                        handleSearchChange(tag);
                         setSelectedPostSlug(null);
                         window.scrollTo({ top: 0 });
                       }}
@@ -865,9 +951,18 @@ export default function BlogPage({}: BlogPageProps) {
               type="text"
               placeholder="Search by keywords or titles..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-250 dark:border-gray-800 rounded-xl pl-9 pr-4 py-2 text-xs font-semibold text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-250 dark:border-gray-800 rounded-xl pl-9 pr-8 py-2 text-xs font-semibold text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
+            {searchTerm && (
+              <button
+                onClick={() => handleSearchChange('')}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer focus:outline-none"
+                title="Clear search"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
           </div>
         </section>
 

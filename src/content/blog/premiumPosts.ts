@@ -10,6 +10,7 @@ import { post as burnedOutCoastFireStrategy } from './posts/burned-out-coast-fir
 import { post as latteFactorVersusBigWins } from './posts/latte-factor-versus-big-wins';
 import { post as moneyAnxietyExpensiveWorld } from './posts/money-anxiety-expensive-world';
 import { post as moneyFightsRelationshipsCompromise } from './posts/money-fights-relationships-compromise';
+import { additionalPremiumPosts } from './posts/additionalPremiumPosts';
 
 export const PRECOMPUTED_CONTENT_MAP: Record<string, {
   sections: { heading: string; content: string }[];
@@ -18,6 +19,10 @@ export const PRECOMPUTED_CONTENT_MAP: Record<string, {
   summary?: string;
   category?: string;
   tags?: string[];
+  primaryKeyword?: string;
+  secondaryKeywords?: string[];
+  metaDescription?: string;
+  faqs?: { question: string; answer: string }[];
 }> = {
   'how-much-money-to-retire': howMuchMoneyToRetire,
   'fire-movement-explained': fireMovementExplained,
@@ -31,4 +36,5 @@ export const PRECOMPUTED_CONTENT_MAP: Record<string, {
   'latte-factor-versus-big-wins': latteFactorVersusBigWins,
   'money-anxiety-expensive-world': moneyAnxietyExpensiveWorld,
   'money-fights-relationships-compromise': moneyFightsRelationshipsCompromise,
+  ...additionalPremiumPosts
 };

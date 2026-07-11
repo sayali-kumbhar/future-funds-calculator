@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, MessageSquare, ArrowRight, CheckCircle2, Heart, Sparkles } from 'lucide-react';
+import { Mail, MessageSquare, ArrowRight, CheckCircle2, Heart, Sparkles, Info } from 'lucide-react';
 import { Page } from '../types';
 
 interface ContactPageProps {
@@ -15,26 +15,88 @@ export default function ContactPage({}: ContactPageProps) {
     subject: 'feedback',
     message: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleSubmit = (e: FormEvent) => {
+  const accessKey = (import.meta as any).env?.VITE_WEB3FORMS_ACCESS_KEY || '19ca33dc-ca75-45fc-b7c2-ce45ae39f7f9';
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (formState.name && formState.email && formState.message) {
-      const subjectLine = encodeURIComponent(`[Contact Form] ${formState.subject} - from ${formState.name}`);
-      const bodyText = encodeURIComponent(
-        `Name: ${formState.name}\nEmail: ${formState.email}\nSubject: ${formState.subject}\n\nMessage:\n${formState.message}`
-      );
-      
-      window.location.href = `mailto:investnowithme@gmail.com?subject=${subjectLine}&body=${bodyText}`;
+    if (!formState.name || !formState.email || !formState.message) return;
 
-      setSubmitted(true);
-      // Clean form fields
-      setFormState({
-        name: '',
-        email: '',
-        subject: 'feedback',
-        message: '',
-      });
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    if (accessKey) {
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            access_key: accessKey,
+            name: formState.name,
+            email: formState.email,
+            subject: `[Contact Form] ${formState.subject} - from ${formState.name}`,
+            message: formState.message,
+          }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          setSubmitted(true);
+          setFormState({
+            name: '',
+            email: '',
+            subject: 'feedback',
+            message: '',
+          });
+        } else {
+          setSubmitError(data.message || 'Failed to submit form. Please try again.');
+        }
+      } catch (err) {
+        setSubmitError('An error occurred while sending your message. Please try again.');
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      // Direct send fallback using FormSubmit.co without needing an API key
+      try {
+        const response = await fetch('https://formsubmit.co/ajax/investnowithme@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            name: formState.name,
+            email: formState.email,
+            _subject: `[Contact Form] ${formState.subject} - from ${formState.name}`,
+            message: formState.message,
+            _captcha: 'false', // Disable reCAPTCHA for seamless background AJAX submission
+          }),
+        });
+
+        const data = await response.json();
+        if (data.success === 'true' || data.success === true) {
+          setSubmitted(true);
+          setFormState({
+            name: '',
+            email: '',
+            subject: 'feedback',
+            message: '',
+          });
+        } else {
+          setSubmitError(data.message || 'Failed to submit form. Please try again.');
+        }
+      } catch (err) {
+        setSubmitError('An error occurred while sending your message. Please try again.');
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -91,9 +153,14 @@ export default function ContactPage({}: ContactPageProps) {
                 <div className="h-12 w-12 bg-emerald-100 dark:bg-emerald-950 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
                   <CheckCircle2 className="h-6 w-6" />
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">Message Sent Successfully</h3>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                  {accessKey ? 'Message Sent Successfully' : 'Opening Your Email App...'}
+                </h3>
                 <p className="text-xs text-gray-500 dark:text-gray-400 leading-normal max-w-sm mx-auto">
-                  Thank you for your feedback! Our planning and editorial teams review all messages and will respond to your email address within 24-48 business hours.
+                  {accessKey 
+                    ? 'Thank you for your feedback! Our planning team will review your message and respond to your email address within 24-48 business hours.'
+                    : 'We have initiated an email to investnowithme@gmail.com. Please make sure to click "Send" in your local email app to complete your message delivery.'
+                  }
                 </p>
                 <button
                   onClick={() => setSubmitted(false)}
@@ -107,6 +174,16 @@ export default function ContactPage({}: ContactPageProps) {
                 <h3 className="text-base font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-2">
                   Send a Direct Message
                 </h3>
+
+                {!accessKey && (
+                  <div className="p-3.5 bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/30 rounded-xl flex gap-3 text-xs text-amber-800 dark:text-amber-300">
+                    <Info className="h-4 w-4 shrink-0 text-amber-500 mt-0.5" />
+                    <div>
+                      <span className="font-semibold block mb-0.5">Email Client Fallback Active</span>
+                      This form currently opens your local email client (using a mailto link). To enable direct background submissions straight to your email, configure a free <a href="https://web3forms.com" target="_blank" rel="noopener noreferrer" className="underline font-bold hover:text-amber-900 dark:hover:text-amber-150">Web3Forms Access Key</a> in your environment variables.
+                    </div>
+                  </div>
+                )}
 
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1.5">
@@ -166,11 +243,25 @@ export default function ContactPage({}: ContactPageProps) {
                   ></textarea>
                 </div>
 
+                {submitError && (
+                  <div className="p-3 bg-rose-50 dark:bg-rose-950/20 border border-rose-100 dark:border-rose-900/30 text-rose-600 dark:text-rose-400 text-xs rounded-xl">
+                    {submitError}
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl py-3 text-sm shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  disabled={isSubmitting}
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-semibold rounded-xl py-3 text-sm shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 flex items-center justify-center gap-2"
                 >
-                  Send Message
+                  {isSubmitting ? (
+                    <>
+                      <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <span>Send Message</span>
+                  )}
                 </button>
               </form>
             )}
