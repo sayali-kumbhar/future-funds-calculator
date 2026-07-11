@@ -1,4 +1,9 @@
 import { CalculatorConfig } from '../types/calculator';
+import { calculator as nps_calc } from './nps-calc';
+import { calculator as step_up_sip } from './step-up-sip';
+import { calculator as swp_calc } from './swp-calc';
+import { calculator as ppf_calc } from './ppf-calc';
+import { calculator as gst_calc } from './gst-calc';
 import { calculator as financial_freedom } from './financial-freedom';
 import { calculator as fire } from './fire';
 import { calculator as coast_fire } from './coast-fire';
@@ -124,6 +129,11 @@ export const CALCULATORS_LIST: CalculatorConfig[] = [
   savings_goal_calc,
   debt_payoff_calc,
   budget_planner_calc,
+  nps_calc,
+  step_up_sip,
+  swp_calc,
+  ppf_calc,
+  gst_calc,
   ...extraCalculators,
 ];
 
