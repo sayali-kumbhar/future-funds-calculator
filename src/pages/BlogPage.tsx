@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import {
   Search,
   BookOpen,
@@ -26,6 +26,7 @@ import {
   X,
 } from 'lucide-react';
 import { blogData as initialBlogData } from '../data/blogData';
+import { CALCULATORS_LIST } from '../data/calculatorsData';
 import { BlogPost, Page } from '../types';
 
 interface BlogPageProps {
@@ -77,10 +78,6 @@ export default function BlogPage({}: BlogPageProps) {
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
-    // Reset category to 'All' when searching to search the entire library
-    if (value && selectedCategory !== 'All') {
-      setSelectedCategory('All');
-    }
   };
 
   const setSelectedPostSlug = (newSlug: string | null) => {
@@ -331,8 +328,16 @@ export default function BlogPage({}: BlogPageProps) {
   // Filter Search
   const filteredPosts = useMemo(() => {
     return blogs.filter((post) => {
+      const isArticleNameMatch = searchTerm.trim() !== '' && (
+        post.title.toLowerCase().includes(searchTerm.trim().toLowerCase()) ||
+        post.slug.toLowerCase().includes(searchTerm.trim().toLowerCase())
+      );
+
       const matchesCategory =
-        selectedCategory === 'All' || post.category === selectedCategory;
+        selectedCategory === 'All' || 
+        post.category === selectedCategory ||
+        isArticleNameMatch;
+
       const matchesSearch =
         post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         post.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -356,6 +361,46 @@ export default function BlogPage({}: BlogPageProps) {
     if (!activePost) return [];
     return blogs.filter((p) => activePost.relatedSlugs.includes(p.slug));
   }, [activePost, blogs]);
+
+  // Dynamic matched calculators for the active blog post (for bidirectional internal linking)
+  const relatedCalculators = useMemo(() => {
+    if (!activePost) return [];
+    
+    // 1. First, check if there is a calculator with the exact slug matching the post slug
+    const directMatch = CALCULATORS_LIST.find(c => c.slug === activePost.slug);
+    
+    // 2. Otherwise, find by matching keywords or category
+    const matched = CALCULATORS_LIST.filter(c => {
+      if (c.slug === activePost.slug) return false;
+      const keyword = c.primaryKeyword ? c.primaryKeyword.toLowerCase() : c.name.toLowerCase();
+      const inTitle = activePost.title.toLowerCase().includes(keyword);
+      const inSummary = activePost.summary.toLowerCase().includes(keyword);
+      return inTitle || inSummary;
+    });
+
+    const combined = directMatch ? [directMatch, ...matched] : matched;
+    
+    if (combined.length > 0) {
+      return combined.slice(0, 3);
+    }
+    
+    // Fallback: match by general category mapping
+    const categoryMap: Record<string, string> = {
+      'Financial Freedom': 'fire',
+      'Retirement': 'retirement',
+      'Investing': 'investing',
+      'Mutual Funds': 'investing',
+      'Stock Market': 'investing',
+      'Savings': 'savings_budget',
+      'Budgeting': 'savings_budget',
+      'Passive Income': 'fire',
+      'Tax Planning': 'retirement',
+      'Financial Calculators': 'savings_budget',
+    };
+    
+    const mappedCategory = categoryMap[activePost.category] || 'investing';
+    return CALCULATORS_LIST.filter(c => c.category === mappedCategory).slice(0, 3);
+  }, [activePost]);
 
   // Calculate Previous & Next posts for structured internal linking flow
   const { prevPost, nextPost } = useMemo(() => {
@@ -691,8 +736,8 @@ export default function BlogPage({}: BlogPageProps) {
                       const isOpen = openFaqIndex === idx;
                       return (
                         <div
-                          key={idx}
-                          className="border border-gray-150 dark:border-gray-800 rounded-2xl overflow-hidden bg-white dark:bg-gray-950/40 transition-colors"
+                           key={idx}
+                           className="border border-gray-150 dark:border-gray-850 rounded-2xl overflow-hidden bg-white dark:bg-gray-950/40 transition-colors"
                         >
                           <button
                             onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
@@ -709,6 +754,46 @@ export default function BlogPage({}: BlogPageProps) {
                         </div>
                       );
                     })}
+                  </div>
+                </section>
+              )}
+
+              {/* Recommended Interactive Simulators Section */}
+              {relatedCalculators.length > 0 && (
+                <section className="border-t border-gray-150 dark:border-gray-900 pt-8 space-y-6">
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest flex items-center gap-1">
+                      <Calculator className="h-3.5 w-3.5" /> Interactive Tools
+                    </span>
+                    <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white tracking-tight">
+                      Recommended Financial Simulators
+                    </h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {relatedCalculators.map((calc) => (
+                      <Link
+                        key={calc.slug}
+                        to={`/calculators/${calc.slug}`}
+                        className="group flex flex-col justify-between p-5 border border-gray-150 dark:border-gray-850 rounded-2xl bg-white dark:bg-gray-900 hover:border-emerald-500 hover:bg-gray-50/50 dark:hover:bg-gray-900/20 transition-all text-left"
+                      >
+                        <div className="space-y-2">
+                          <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-full border border-emerald-100 dark:border-emerald-900/10">
+                            {calc.category.replace('_', ' ')}
+                          </span>
+                          <h4 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                            {calc.name}
+                          </h4>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                            {calc.metaDesc}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-4 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                          <span>Launch Simulator</span>
+                          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                        </div>
+                      </Link>
+                    ))}
                   </div>
                 </section>
               )}
@@ -772,34 +857,6 @@ export default function BlogPage({}: BlogPageProps) {
                   Spread financial literacy: Share this blueprint
                 </span>
                 <div className="flex flex-wrap items-center gap-2">
-                  <button
-                    onClick={() => handleSocialShare('twitter')}
-                    className="h-8 w-8 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-850 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center justify-center transition-colors"
-                    title="Share on Twitter"
-                  >
-                    <Twitter className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => handleSocialShare('linkedin')}
-                    className="h-8 w-8 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-850 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center justify-center transition-colors"
-                    title="Share on LinkedIn"
-                  >
-                    <Linkedin className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => handleSocialShare('facebook')}
-                    className="h-8 w-8 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-850 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center justify-center transition-colors"
-                    title="Share on Facebook"
-                  >
-                    <Facebook className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={() => handleSocialShare('mail')}
-                    className="h-8 w-8 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-850 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center justify-center transition-colors"
-                    title="Share via Email"
-                  >
-                    <Mail className="h-4 w-4" />
-                  </button>
                   <button
                     onClick={handleCopyLink}
                     className="inline-flex items-center space-x-1.5 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-3.5 py-1.5 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-900 focus:outline-none"

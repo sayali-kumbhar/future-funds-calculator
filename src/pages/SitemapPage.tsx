@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Page } from '../types';
 import { Map, Download, Copy, Globe, Link2, Check } from 'lucide-react';
+import { DEFAULT_SEO } from '../constants/seo';
 
 interface SitemapPageProps {
   setCurrentPage?: (page: Page) => void;
@@ -12,63 +13,99 @@ export default function SitemapPage({}: SitemapPageProps) {
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
 
-  // XML content
+  // XML content dynamically generated using site's primary base URL
   const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Core pages -->
   <url>
-    <loc>https://future-funds-calculator.vercel.app/</loc>
-    <lastmod>2026-07-11</lastmod>
+    <loc>${DEFAULT_SEO.BASE_URL}/</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.00</priority>
   </url>
   <url>
-    <loc>https://future-funds-calculator.vercel.app/about</loc>
-    <lastmod>2026-07-11</lastmod>
+    <loc>${DEFAULT_SEO.BASE_URL}/about</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://future-funds-calculator.vercel.app/blog</loc>
-    <lastmod>2026-07-11</lastmod>
+    <loc>${DEFAULT_SEO.BASE_URL}/blog</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://future-funds-calculator.vercel.app/faq</loc>
-    <lastmod>2026-07-11</lastmod>
+    <loc>${DEFAULT_SEO.BASE_URL}/faq</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://future-funds-calculator.vercel.app/contact</loc>
-    <lastmod>2026-07-11</lastmod>
+    <loc>${DEFAULT_SEO.BASE_URL}/contact</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>${DEFAULT_SEO.BASE_URL}/learn</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>${DEFAULT_SEO.BASE_URL}/quizzes</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>${DEFAULT_SEO.BASE_URL}/budget-planner</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>${DEFAULT_SEO.BASE_URL}/goal-tracker</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>${DEFAULT_SEO.BASE_URL}/net-worth-tracker</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>${DEFAULT_SEO.BASE_URL}/roadmap</loc>
+    <lastmod>2026-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
   </url>
 
   <!-- Legal sheets -->
   <url>
-    <loc>https://future-funds-calculator.vercel.app/privacy</loc>
-    <lastmod>2026-07-11</lastmod>
+    <loc>${DEFAULT_SEO.BASE_URL}/privacy</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://future-funds-calculator.vercel.app/terms</loc>
-    <lastmod>2026-07-11</lastmod>
+    <loc>${DEFAULT_SEO.BASE_URL}/terms</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://future-funds-calculator.vercel.app/disclaimer</loc>
-    <lastmod>2026-07-11</lastmod>
+    <loc>${DEFAULT_SEO.BASE_URL}/disclaimer</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
   <url>
-    <loc>https://future-funds-calculator.vercel.app/cookie</loc>
-    <lastmod>2026-07-11</lastmod>
+    <loc>${DEFAULT_SEO.BASE_URL}/cookie</loc>
+    <lastmod>2026-07-12</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.30</priority>
   </url>
@@ -102,6 +139,12 @@ export default function SitemapPage({}: SitemapPageProps) {
     { name: 'Platform Blog', route: 'blog' as Page, desc: '100 comprehensive guides on systematic wealth, compound returns, indices, and debt elimination.', priority: '0.9' },
     { name: 'Knowledge FAQ', route: 'faq' as Page, desc: 'Structured accordions resolving over 20 questions regarding safe withdraw metrics.', priority: '0.8' },
     { name: 'Contact Team', route: 'contact' as Page, desc: 'Connect with planners for support issues, partner feedback, or structural inquiries.', priority: '0.7' },
+    { name: 'Learning Library', route: 'learn' as Page, desc: 'Educational hub centering historical index data and modular investment strategies.', priority: '0.85' },
+    { name: 'Finance Quizzes', route: 'quizzes' as Page, desc: 'Dynamic test models evaluating compound curves and portfolio risk metrics.', priority: '0.8' },
+    { name: 'Budget Planner', route: 'budget-planner' as Page, desc: 'Visual 50/30/20 budget allocations and saving rate calculators.', priority: '0.9' },
+    { name: 'Goal Tracker', route: 'goal-tracker' as Page, desc: 'Define milestone dates and compute chronological compound paths.', priority: '0.9' },
+    { name: 'Net Worth Tracker', route: 'net-worth-tracker' as Page, desc: 'Analyze assets and liabilities with local caching support.', priority: '0.9' },
+    { name: 'Freedom Roadmap', route: 'roadmap' as Page, desc: 'Printable Year-by-Year asset allocations and chronological targets.', priority: '0.9' },
     { name: 'Privacy Policy', route: 'privacy' as Page, desc: 'Formal client-side safety sheets confirming no centralized tracking occurs.', priority: '0.3' },
     { name: 'Terms of Service', route: 'terms' as Page, desc: 'Explicit usage boundaries governing free personal planning calculators.', priority: '0.3' },
     { name: 'Advisory Disclaimer', route: 'disclaimer' as Page, desc: 'Critical notice warning that calculators represent index simulations.', priority: '0.3' },

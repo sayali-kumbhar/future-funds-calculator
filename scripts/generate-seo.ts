@@ -3,7 +3,7 @@ import path from 'path';
 import { blogData } from '../src/data/blogData';
 import { CALCULATORS_LIST } from '../src/data/calculatorsData';
 
-const BASE_URL = 'https://future-funds-calculator.vercel.app';
+const BASE_URL = 'https://ais-dev-ebqpux64scfagtipejtjsf-961875300714.asia-southeast1.run.app';
 const PUBLIC_DIR = path.join(process.cwd(), 'public');
 
 function generateSitemap() {
@@ -21,6 +21,12 @@ function generateSitemap() {
     { loc: '/cookie', changefreq: 'yearly', priority: '0.30' },
     { loc: '/ai-blueprint', changefreq: 'weekly', priority: '0.85' },
     { loc: '/calculators', changefreq: 'weekly', priority: '0.90' },
+    { loc: '/learn', changefreq: 'weekly', priority: '0.85' },
+    { loc: '/quizzes', changefreq: 'weekly', priority: '0.80' },
+    { loc: '/budget-planner', changefreq: 'weekly', priority: '0.90' },
+    { loc: '/goal-tracker', changefreq: 'weekly', priority: '0.90' },
+    { loc: '/net-worth-tracker', changefreq: 'weekly', priority: '0.90' },
+    { loc: '/roadmap', changefreq: 'weekly', priority: '0.90' },
   ];
 
   const calculatorPages = CALCULATORS_LIST.map(calc => ({

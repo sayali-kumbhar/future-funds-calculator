@@ -33,6 +33,19 @@ export function slugify(text: string): string {
 
 // 100 evergreen topic seeds
 export const BLOG_SEEDS = [
+  // 5 Premium Custom AdSense Seeds
+  { title: "Gratuity Retirement Guide", category: "Financial Calculators", summary: "Learn how your gratuity is calculated, statutory eligibility rules, and tax limits in India.", slug: "gratuity-calc" },
+  { title: "HRA Tax Exemption Guide", category: "Financial Calculators", summary: "A detailed walkthrough on maximizing your House Rent Allowance tax exemption under Section 10(13A).", slug: "hra-calc" },
+  { title: "EPF Retirement Calculator Guide", category: "Financial Calculators", summary: "Master your retirement planning with the Employees Provident Fund, statutory split rates, and compound growth.", slug: "epf-calc" },
+  { title: "SIP vs Lump Sum Investing Guide", category: "Financial Calculators", summary: "Should you invest a lump sum immediately or spread it systematically? Compare rupee cost averaging and immediate growth.", slug: "sip-vs-lump-sum" },
+  { title: "FD vs Debt Fund Tax Deferral Blueprint", category: "Financial Calculators", summary: "Understand how annual tax drag affects bank FDs and how Debt Funds compound faster via tax deferral.", slug: "fd-vs-debt-fund" },
+  { title: "Ultimate Car Finance Guide", category: "Financial Calculators", summary: "Master your car purchasing budget with our Car Finance Calculator. Learn how down payments, terms, and taxes impact your real monthly EMI.", slug: "car-finance-calc" },
+  { title: "Home Finance Planning Blueprint", category: "Financial Calculators", summary: "A comprehensive guide to managing mortgage payments, down payments, and secondary housing costs like property tax, home insurance, and HOA fees.", slug: "home-finance-calc" },
+  { title: "Mastering Boat Financing & Upkeep", category: "Financial Calculators", summary: "Learn how boat loans differ from standard auto loans, and how storage, slip fees, and mechanical repairs shape your true monthly vessel budget.", slug: "boat-finance-calc" },
+  { title: "Motorcycle Finance & Gear Budgeting", category: "Financial Calculators", summary: "Get on the road responsibly. Learn how motorcycle financing, higher bike interest rates, safety gear, and specialized insurance fit your budget.", slug: "motorcycle-finance-calc" },
+  { title: "Commercial Equipment Financing Playbook", category: "Financial Calculators", summary: "Accelerate your business cash flow. Deconstruct commercial equipment loan rates, leasing vs buying, and first-year Section 179 tax deductions.", slug: "equipment-finance-calc" },
+  { title: "Ultimate General Finance Calculator Guide", category: "Financial Calculators", summary: "A master manual for balancing loans and compound investments. Learn how to toggle and optimize your debt payments and compounding assets.", slug: "finance-calculator" },
+
   // 1-43: Core user-requested topics
   { title: "What Is Financial Freedom?", category: "Financial Freedom", summary: "Explore the foundational concept of financial independence, defining what it means to live life on your own terms without financial stress." },
   { title: "How Much Money Do You Need To Retire?", category: "Retirement", summary: "A step-by-step mathematical breakdown to calculate your exact retirement nest egg based on your current and future lifestyle expenses." },
@@ -339,7 +352,7 @@ const EXPANDED_SEEDS = getExpandedSeeds();
 
 // Map seed data to complete BlogPost list
 export const allBlogsMetadata: BlogPost[] = EXPANDED_SEEDS.map((seed, idx) => {
-  const slug = slugify(seed.title);
+  const slug = (seed as any).slug || slugify(seed.title);
   const dateObj = new Date('2026-07-07T00:00:00Z');
   // Subtract idx days to stagger publish dates back in time
   dateObj.setDate(dateObj.getDate() - idx * 2);

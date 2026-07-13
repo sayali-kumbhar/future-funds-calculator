@@ -23,6 +23,7 @@ export interface CalculatorConfig {
   explanation: string;
   example: string;
   relatedSlugs: string[];
+  relatedArticleSlugs?: string[];
   fields: CalculatorField[];
   faqs: { question: string; answer: string }[];
   calculate: (inputs: Record<string, any>, currencyCode: string) => {

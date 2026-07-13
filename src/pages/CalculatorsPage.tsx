@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { CALCULATORS_LIST, CalculatorConfig } from '../data/calculatorsData';
+import { blogData } from '../data/blogData';
 import { SUPPORTED_CURRENCIES } from '../data/currenciesData';
 import { generateCalculatorPDF } from '../utils/pdfExport';
 import {
@@ -56,6 +57,23 @@ export default function CalculatorsPage() {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   const calculator = CALCULATORS_LIST.find((c) => c.slug === activeSlug) || CALCULATORS_LIST[0];
+
+  const relatedArticles = useMemo(() => {
+    if (!calculator) return [];
+    if (calculator.relatedArticleSlugs && calculator.relatedArticleSlugs.length > 0) {
+      return blogData.filter(post => calculator.relatedArticleSlugs?.includes(post.slug)).slice(0, 3);
+    }
+    const matched = blogData.filter(post => {
+      if (post.slug === calculator.slug) return true;
+      const titleWords = calculator.name.toLowerCase().split(/\s+/).filter(w => w.length > 3 && w !== 'calculator');
+      const hasWordMatch = titleWords.some(word => post.title.toLowerCase().includes(word) || post.summary.toLowerCase().includes(word));
+      return hasWordMatch;
+    });
+    if (matched.length > 0) {
+      return matched.slice(0, 3);
+    }
+    return blogData.slice(0, 3);
+  }, [calculator]);
 
   // Dynamic Schema.org injection
   useEffect(() => {
@@ -710,6 +728,40 @@ export default function CalculatorsPage() {
             })}
           </div>
         </div>
+
+        {/* 4b. Recommended Editorial Guides & Articles */}
+        {relatedArticles.length > 0 && (
+          <div className="bg-gray-50/50 dark:bg-gray-900/10 border border-gray-150 dark:border-gray-850 p-6 rounded-2xl space-y-4">
+            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+              Recommended Editorial Guides & Articles
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {relatedArticles.map((post) => (
+                <Link
+                  key={post.slug}
+                  to={`/blog/${post.slug}`}
+                  className="group flex flex-col justify-between p-4 rounded-xl bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-850 hover:border-emerald-500 text-xs text-gray-700 dark:text-gray-300 transition-all hover:shadow-sm"
+                >
+                  <div className="space-y-1.5">
+                    <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                      {post.category}
+                    </span>
+                    <h5 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors line-clamp-2">
+                      {post.title}
+                    </h5>
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400 line-clamp-2">
+                      {post.summary}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1 mt-3 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+                    <span>Read Guide</span>
+                    <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 5. Custom FAQ list for that specific selected calculator */}
         <div className="space-y-6 max-w-4xl">

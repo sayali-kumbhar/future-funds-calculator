@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { FileText, Download, Copy, Shield, Check } from 'lucide-react';
+import { DEFAULT_SEO } from '../constants/seo';
 
 export default function RobotsPage() {
   const [copied, setCopied] = useState(false);
 
-  // Content for robots.txt
+  // Content for robots.txt dynamically adjusted to match platform base URL
   const robotsTxt = `# https://www.robotstxt.org/robotstxt.html
 # FutureFund Crawler Specification - July 2026
 
@@ -15,13 +16,21 @@ Allow: /about
 Allow: /blog
 Allow: /faq
 Allow: /contact
+Allow: /calculators
+Allow: /ai-blueprint
+Allow: /learn
+Allow: /quizzes
+Allow: /budget-planner
+Allow: /goal-tracker
+Allow: /net-worth-tracker
+Allow: /roadmap
 
 # Protect temporary cache directories or mock artifacts
 Disallow: /assets/.aistudio/
 Disallow: /node_modules/
 Disallow: /dist/
 
-Sitemap: https://future-funds-calculator.vercel.app/sitemap.xml`;
+Sitemap: ${DEFAULT_SEO.BASE_URL}/sitemap.xml`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(robotsTxt);

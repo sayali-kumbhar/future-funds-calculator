@@ -1,4 +1,15 @@
 import { CalculatorConfig } from '../types/calculator';
+import { calculator as gratuity_calc } from './gratuity-calc';
+import { calculator as hra_calc } from './hra-calc';
+import { calculator as epf_calc } from './epf-calc';
+import { calculator as sip_vs_lump_sum_calc } from './sip-vs-lump-sum';
+import { calculator as fd_vs_debt_fund_calc } from './fd-vs-debt-fund';
+import { calculator as car_finance_calc } from './car-finance-calc';
+import { calculator as home_finance_calc } from './home-finance-calc';
+import { calculator as boat_finance_calc } from './boat-finance-calc';
+import { calculator as motorcycle_finance_calc } from './motorcycle-finance-calc';
+import { calculator as equipment_finance_calc } from './equipment-finance-calc';
+import { calculator as finance_calculator } from './finance-calculator';
 import { calculator as nps_calc } from './nps-calc';
 import { calculator as step_up_sip } from './step-up-sip';
 import { calculator as swp_calc } from './swp-calc';
@@ -134,6 +145,17 @@ export const CALCULATORS_LIST: CalculatorConfig[] = [
   swp_calc,
   ppf_calc,
   gst_calc,
+  gratuity_calc,
+  hra_calc,
+  epf_calc,
+  sip_vs_lump_sum_calc,
+  fd_vs_debt_fund_calc,
+  car_finance_calc,
+  home_finance_calc,
+  boat_finance_calc,
+  motorcycle_finance_calc,
+  equipment_finance_calc,
+  finance_calculator,
   ...extraCalculators,
 ];
 
