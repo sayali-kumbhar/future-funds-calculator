@@ -603,7 +603,7 @@ export const EXPANDED_CALCULATORS: CalculatorConfig[] = [
     ],
     faqs: [
       { question: 'Why are index funds highly rated?', answer: 'They carry near-zero active management fees, provide instant diversification, and historical studies show they outperform 90% of actively managed mutual funds.' },
-      { question: 'What index does FutureFund recommend?', answer: 'Standard indices include the S&P 500 for US equities or the Nifty 50 for Indian markets.' }
+      { question: 'What index does FreeFinanceCal recommend?', answer: 'Standard indices include the S&P 500 for US equities or the Nifty 50 for Indian markets.' }
     ],
     calculate: (inputs, currency) => {
       const pmt = inputs.monthlySip || 0;

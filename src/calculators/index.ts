@@ -75,6 +75,12 @@ import { calculator as savings_calc } from './savings-calc';
 import { calculator as savings_goal_calc } from './savings-goal-calc';
 import { calculator as debt_payoff_calc } from './debt-payoff-calc';
 import { calculator as budget_planner_calc } from './budget-planner-calc';
+import { calculator as value_of_time } from './value-of-time';
+import { calculator as hdhp_vs_ppo } from './hdhp-vs-ppo';
+import { calculator as backdoor_roth } from './backdoor-roth';
+import { calculator as rideshare_vs_car } from './rideshare-vs-car';
+import { calculator as wedding_opportunity } from './wedding-opportunity';
+import { calculator as credit_card_rewards } from './credit-card-rewards';
 import { extraCalculators } from './extra-calculators';
 
 export * from '../types/calculator';
@@ -156,6 +162,12 @@ export const CALCULATORS_LIST: CalculatorConfig[] = [
   motorcycle_finance_calc,
   equipment_finance_calc,
   finance_calculator,
+  value_of_time,
+  hdhp_vs_ppo,
+  backdoor_roth,
+  rideshare_vs_car,
+  wedding_opportunity,
+  credit_card_rewards,
   ...extraCalculators,
 ];
 

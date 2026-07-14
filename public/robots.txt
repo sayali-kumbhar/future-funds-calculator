@@ -1,5 +1,5 @@
 # https://www.robotstxt.org/robotstxt.html
-# FutureFund Crawler Specification - July 2026
+# FreeFinanceCal Crawler Specification - July 2026
 
 User-agent: *
 Allow: /
@@ -15,4 +15,4 @@ Disallow: /assets/.aistudio/
 Disallow: /node_modules/
 Disallow: /dist/
 
-Sitemap: https://future-funds-calculator.vercel.app/sitemap.xml
+Sitemap: https://ais-dev-ebqpux64scfagtipejtjsf-961875300714.asia-southeast1.run.app/sitemap.xml

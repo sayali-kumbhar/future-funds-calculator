@@ -185,7 +185,7 @@ export default function BlogPage({}: BlogPageProps) {
         {
           "@type": "ListItem",
           "position": 3,
-          "name": activePost.title,
+          "name": "Articles",
           "item": postUrl
         }
       ]

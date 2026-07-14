@@ -11,6 +11,7 @@ import { post as latteFactorVersusBigWins } from './posts/latte-factor-versus-bi
 import { post as moneyAnxietyExpensiveWorld } from './posts/money-anxiety-expensive-world';
 import { post as moneyFightsRelationshipsCompromise } from './posts/money-fights-relationships-compromise';
 import { additionalPremiumPosts } from './posts/additionalPremiumPosts';
+import { newCalculatorsBlogs } from './posts/newCalculatorsBlogs';
 
 export const PRECOMPUTED_CONTENT_MAP: Record<string, {
   sections: { heading: string; content: string }[];
@@ -36,5 +37,6 @@ export const PRECOMPUTED_CONTENT_MAP: Record<string, {
   'latte-factor-versus-big-wins': latteFactorVersusBigWins,
   'money-anxiety-expensive-world': moneyAnxietyExpensiveWorld,
   'money-fights-relationships-compromise': moneyFightsRelationshipsCompromise,
-  ...additionalPremiumPosts
+  ...additionalPremiumPosts,
+  ...newCalculatorsBlogs
 };

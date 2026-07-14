@@ -67,7 +67,7 @@ function generateRobots() {
   console.log('Generating robots.txt...');
 
   const robots = `# https://www.robotstxt.org/robotstxt.html
-# FutureFund Crawler Specification - July 2026
+# FreeFinanceCal Crawler Specification - July 2026
 
 User-agent: *
 Allow: /
