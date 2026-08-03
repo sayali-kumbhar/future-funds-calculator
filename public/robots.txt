@@ -1,5 +1,5 @@
 # https://www.robotstxt.org/robotstxt.html
-# FreeFinanceCal Crawler Specification - July 2026
+# FutureFund — Financial Calculators & Money Planning Tools Crawler Specification - 2026
 
 User-agent: *
 Allow: /

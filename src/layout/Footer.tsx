@@ -25,12 +25,15 @@ export default function Footer({}: FooterProps) {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-sm shadow-emerald-500/20">
                 <TrendingUp className="h-4 w-4" />
               </div>
-              <span className="text-lg font-bold text-gray-900 dark:text-white">
+              <span className="text-lg font-bold text-gray-900 dark:text-white flex items-center">
                 Future<span className="text-emerald-600">Fund</span>
+                <span className="ml-1.5 rounded-md bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+                  Calculators & Money Tools
+                </span>
               </span>
             </Link>
             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-md">
-              Empowering the next generation to take control of their finances, visualize compounding returns, and map pathways to sustainable financial independence.
+              <strong>FutureFund — Financial Calculators & Money Planning Tools</strong> ⭐. Free suite of 30+ interactive financial calculators, wealth planning tools, and personal finance guides. Empowering individuals to calculate compound growth, optimize tax strategies, and build sustainable wealth.
             </p>
             <div className="flex space-y-2 flex-col">
               <span className="text-xs text-gray-500 dark:text-gray-500">
@@ -101,7 +104,7 @@ export default function Footer({}: FooterProps) {
 
         <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-900 flex flex-col sm:flex-row items-center justify-between">
           <p className="text-xs text-gray-500 dark:text-gray-500">
-            &copy; {currentYear} FutureFund Platform. Designed with absolute precision. All calculation calculations are based on standard mathematical compound growth formulae. Past index performance does not guarantee future financial yields.
+            &copy; {currentYear} FutureFund — Financial Calculators & Money Planning Tools. All calculation models are based on standard financial compound growth formulae. Past index performance does not guarantee future financial yields.
           </p>
           <div className="mt-4 sm:mt-0 flex space-x-6">
             <span className="text-xs font-mono text-gray-400 dark:text-gray-600">

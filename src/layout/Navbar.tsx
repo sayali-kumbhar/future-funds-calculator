@@ -43,9 +43,16 @@ export default function Navbar({
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-500/20 dark:shadow-emerald-950/30">
             <TrendingUp className="h-5 w-5" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Future<span className="text-emerald-600">Fund</span>
-          </span>
+          <div className="flex flex-col">
+            <div className="flex items-center space-x-1.5">
+              <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Future<span className="text-emerald-600">Fund</span>
+              </span>
+              <span className="hidden sm:inline-flex items-center rounded-md bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+                Calculators & Money Tools
+              </span>
+            </div>
+          </div>
         </Link>
 
         {/* Desktop Navigation Links */}

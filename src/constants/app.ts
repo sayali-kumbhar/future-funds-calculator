@@ -1,5 +1,5 @@
-export const APP_NAME = 'FutureFund';
-export const APP_TAGLINE = 'Design Your Financial Freedom';
+export const APP_NAME = 'FutureFund — Financial Calculators & Money Planning Tools';
+export const APP_TAGLINE = 'Free Financial Calculators & Money Planning Tools';
 
 export const APP_QUOTES = [
   { quote: "Do not save what is left after spending, but spend what is left after saving.", author: "Warren Buffett" },

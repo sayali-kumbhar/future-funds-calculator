@@ -1041,34 +1041,6 @@ const compactSpecs: Omit<CalculatorConfig, 'primaryKeyword' | 'formulaName' | 'f
     }
   },
   {
-    slug: 'backdoor-roth',
-    name: 'Backdoor Roth IRA Planner',
-    category: 'retirement',
-    metaTitle: 'Backdoor Roth Conversion Planner',
-    metaDesc: 'Plan backdoor Roth contributions, tracking traditional conversion steps and checking pro-rata taxation rules.',
-    fields: [
-      { key: 'traditionalContribution', label: 'Non-Deductible Contribution', type: 'number', defaultValue: 7000, isCurrency: true },
-      { key: 'preTaxIraBalance', label: 'Existing Pre-Tax IRA Balance', type: 'number', defaultValue: 0, isCurrency: true }
-    ],
-    calculate: (inputs) => {
-      const nonDed = inputs.traditionalContribution || 7000;
-      const preTax = inputs.preTaxIraBalance || 0;
-      const totalIra = nonDed + preTax;
-      // Pro-rata rule: taxable percentage = pre-tax / total-ira
-      const taxableRatio = totalIra > 0 ? preTax / totalIra : 0;
-      const taxableConversionAmount = nonDed * taxableRatio;
-      const taxFreeConversionAmount = nonDed * (1 - taxableRatio);
-      return {
-        metrics: [
-          { label: 'Tax-Free Conversion Amount', value: taxFreeConversionAmount, isPrimary: true, desc: 'Conversion portion transferred free of income tax' },
-          { label: 'Taxable Conversion Amount', value: taxableConversionAmount, desc: 'Portion subject to tax (Pro-Rata Rule)' },
-          { label: 'IRS Pro-Rata Percentage (%)', value: `${(taxableRatio * 100).toFixed(1)}%`, desc: 'Percent of conversion subject to taxes' }
-        ],
-        explanationText: `A backdoor Roth conversion allows higher earners to seed Roth accounts. Because your pre-tax IRA balance is ${preTax.toLocaleString()}, the IRS pro-rata rule mandates that ${(taxableRatio * 100).toFixed(0)}% of conversion is taxable.`
-      };
-    }
-  },
-  {
     slug: 'net-worth-milestone',
     name: 'Net Worth Milestone Calculator',
     category: 'savings_budget',

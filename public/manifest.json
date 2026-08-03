@@ -1,7 +1,7 @@
 {
   "short_name": "FutureFund",
-  "name": "FutureFund - Design Your Financial Freedom",
-  "description": "Interactive SaaS compound planners and customized financial independence calculators.",
+  "name": "FutureFund — Financial Calculators & Money Planning Tools",
+  "description": "Access 30+ free financial calculators, compound interest tools, retirement planners, and wealth guides.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#020617",

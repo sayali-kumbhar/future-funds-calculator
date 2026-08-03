@@ -10,7 +10,10 @@ export type Page =
   | 'faq'
   | 'sitemap'
   | 'robots'
-  | 'blog-post';
+  | 'blog-post'
+  | 'not-found'
+  | 'server-error'
+  | 'maintenance';
 
 export * from './calculator';
 export * from './blog';

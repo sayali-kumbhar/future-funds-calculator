@@ -24,6 +24,7 @@ import Footer from './layout/Footer';
 import SEOHead from './layout/SEOHead';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingSkeleton from './components/LoadingSkeleton';
+import ServerErrorPage from './pages/ServerErrorPage';
 
 // Modular Page Components (Synchronous/Important)
 import CalculatorSection from './components/CalculatorSection';
@@ -36,6 +37,10 @@ const ContactPage = lazy(() => import('./pages/ContactPage'));
 const LegalPage = lazy(() => import('./pages/LegalPage'));
 const SitemapPage = lazy(() => import('./pages/SitemapPage'));
 const RobotsPage = lazy(() => import('./pages/RobotsPage'));
+
+// Error Pages
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const MaintenancePage = lazy(() => import('./pages/MaintenancePage'));
 
 // Premium Global Pages (Lazy Loaded)
 const CalculatorsPage = lazy(() => import('./pages/CalculatorsPage'));
@@ -58,7 +63,10 @@ function getSEOPageFromPathname(pathname: string): Page {
   if (['about', 'blog', 'contact', 'faq', 'privacy', 'terms', 'disclaimer', 'cookie', 'sitemap', 'robots'].includes(cleanPath)) {
     return cleanPath as Page;
   }
-  return 'home';
+  if (cleanPath === '404') return 'not-found';
+  if (cleanPath === '500') return 'server-error';
+  if (cleanPath === 'maintenance') return 'maintenance';
+  return 'not-found';
 }
 
 function AppContent() {
@@ -367,30 +375,13 @@ function AppContent() {
             {/* Sitemap Route */}
             <Route path="/sitemap" element={<SitemapPage />} />
 
-            {/* 404 Route */}
-            <Route
-              path="*"
-              element={
-                <main className="py-24 text-center space-y-6 bg-white dark:bg-gray-950">
-                  <div className="text-emerald-500 font-extrabold text-7xl font-mono">404</div>
-                  <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">
-                    Page Not Found
-                  </h1>
-                  <p className="text-xs sm:text-sm text-gray-400 max-w-sm mx-auto leading-relaxed">
-                    We couldn't locate the directory you requested. It might have been relocated to an alternative route or sitemap block.
-                  </p>
-                  <button
-                    onClick={() => {
-                      navigate('/');
-                      window.scrollTo({ top: 0 });
-                    }}
-                    className="inline-flex items-center space-x-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 text-xs shadow-md cursor-pointer"
-                  >
-                    Back to Home Calculator
-                  </button>
-                </main>
-              }
-            />
+            {/* Dedicated Error Routes */}
+            <Route path="/404" element={<NotFoundPage />} />
+            <Route path="/500" element={<ServerErrorPage />} />
+            <Route path="/maintenance" element={<MaintenancePage />} />
+
+            {/* Catch-all 404 Route */}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
       </div>

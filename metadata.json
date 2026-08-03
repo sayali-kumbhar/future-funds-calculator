@@ -1,6 +1,6 @@
 {
-  "name": "FutureFund",
-  "description": "Estimate your financial freedom age, simulate what-if scenarios, and generate a custom path to financial independence.",
+  "name": "FutureFund — Financial Calculators & Money Planning Tools",
+  "description": "Free financial calculators, compound growth tools, retirement simulators, and expert personal finance guides.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

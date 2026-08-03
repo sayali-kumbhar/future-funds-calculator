@@ -31,7 +31,7 @@ export const calculator: CalculatorConfig = {
   ],
   calculate: (inputs, currency) => {
     const expenses = inputs.medicalExpenses || 0;
-    const tax = inputs.taxRate || 22;
+    const tax = inputs.taxBracket ?? inputs.taxRate ?? 22;
 
     // HDHP Constants & Calculation
     const hdhpPremium = inputs.hdhpPremium || 1800;

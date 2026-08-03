@@ -22,9 +22,10 @@ export const calculator: CalculatorConfig = {
     { key: 'monthlyHOA', label: 'Monthly HOA Fees (If Any)', type: 'number', defaultValue: 150, isCurrency: true }
   ],
   faqs: [
+    { question: 'How is a home loan EMI calculator used to compute mortgage payments?', answer: 'A home loan EMI calculator uses the principal mortgage amount, annual interest rate, and loan term in years (e.g. 15, 20, or 30 years) to estimate your monthly Equated Monthly Installment (EMI), total interest payable, and total property purchase cost including taxes and insurance.' },
+    { question: 'How does a finance calculator home loan tool factor in down payments?', answer: 'By increasing your down payment (e.g. from 10% to 20%), a finance calculator home loan tool shows how reducing your starting principal significantly decreases your monthly EMI payment and saves tens of thousands in interest over a 30-year term.' },
     { question: 'What is the standard down payment for a home loan?', answer: 'The standard traditional down payment is 20% of the purchase price. However, many conventional loans allow down payments as low as 3% to 5%, though this usually requires paying Private Mortgage Insurance (PMI).' },
-    { question: 'What is "PITI" in home finance calculations?', answer: 'PITI stands for Principal, Interest, Taxes, and Insurance. These are the four primary components that make up a standard monthly mortgage payment.' },
-    { question: 'What is Seller Financing?', answer: 'Seller financing (or seller finance) is an alternative real estate agreement where the seller acts as the lender. Instead of a bank, the buyer makes monthly payments directly to the seller based on an agreed-upon interest rate and loan term.' }
+    { question: 'What is "PITI" in home finance calculations?', answer: 'PITI stands for Principal, Interest, Taxes, and Insurance. These are the four primary components that make up a standard monthly mortgage payment.' }
   ],
   calculate: (inputs, currency) => {
     const price = inputs.homePrice || 400000;

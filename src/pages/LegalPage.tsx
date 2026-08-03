@@ -95,6 +95,17 @@ export default function LegalPage({ currentPage }: LegalPageProps) {
                     Our tool utilizes your browser's local state storage (<code className="font-mono bg-gray-100 dark:bg-gray-850 px-1 py-0.5 rounded">LocalStorage</code>) to remember your latest parameters so you do not have to re-enter them. You can clear this persistent cache at any time using your browser settings or by hitting the "Reset" button inside the calculator dashboard.
                   </p>
                 </div>
+
+                <div className="space-y-3">
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white">4. Third-Party Advertising & Google AdSense Cookies</h3>
+                  <p>
+                    Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to FutureFund or other websites on the Internet:
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>Google's use of advertising cookies enables it and its partners to serve ads to users based on their visits to our site and/or other sites across the Internet.</li>
+                    <li>Users may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-emerald-600 underline">Google Ads Settings</a> or by visiting <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer" className="text-emerald-600 underline">www.aboutads.info</a>.</li>
+                  </ul>
+                </div>
               </div>
             )}
 
@@ -192,12 +203,13 @@ export default function LegalPage({ currentPage }: LegalPageProps) {
                 <div className="space-y-3">
                   <h3 className="text-base font-bold text-gray-900 dark:text-white">1. Essential Cookies & LocalStorage</h3>
                   <p>
-                    We do not use tracking cookies, retargeting social advertisement pixels, or third-party behavioral cookies. The only information kept in local memory is:
+                    FutureFund uses essential local memory and optional advertising cookies. Information kept in memory includes:
                   </p>
                   <ul className="list-disc pl-5 space-y-1">
                     <li>Your latest calculator variables (stored via standard LocalStorage so they load on return).</li>
                     <li>Your theme mode preference (light vs. dark mode).</li>
                     <li>Your preferred calculator currency layout (INR vs. USD).</li>
+                    <li>Third-party advertising cookies used by Google AdSense to serve relevant ads based on prior web traffic.</li>
                   </ul>
                 </div>
 

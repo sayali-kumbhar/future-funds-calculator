@@ -120,5 +120,59 @@ export const faqData: FAQItem[] = [
     category: 'savings',
     question: 'Why does my Monthly Investment rate matter more than my savings rate?',
     answer: 'Saving keeps your money static or loses value to inflation. Investing puts your money to work in assets that generate returns. It is the combination of regular monthly investments and the growth of compound returns that generates true financial freedom.'
+  },
+  {
+    id: 'faq-21',
+    category: 'general',
+    question: 'What is a finance calculator?',
+    answer: 'A finance calculator is an interactive online tool designed to compute financial formulas quickly—such as compound interest growth, loan EMIs, retirement nest egg targets, and vehicle financing payments. It allows you to input parameters like principal, interest rates, and loan terms to visualize future wealth and debt outcomes without manual math.'
+  },
+  {
+    id: 'faq-22',
+    category: 'general',
+    question: 'How to use a finance calculator?',
+    answer: 'To use a finance calculator on FutureFund: 1) Select your target tool (such as Compound Interest, Car Finance, or SIP Planner). 2) Enter your base numbers like starting amount, interest rate, and term length. 3) Adjust contribution or tenure sliders to simulate "what-if" scenarios. 4) Instantly inspect visual compounding charts, annual growth schedules, and printable roadmaps.'
+  },
+  {
+    id: 'faq-23',
+    category: 'general',
+    question: 'How is a vehicle finance calculator used for auto loans?',
+    answer: 'A vehicle finance calculator determines your estimated monthly car payment (EMI), total interest payable, and total vehicle purchase cost based on car price, down payment, trade-in value, interest rate, and loan duration (e.g., 36, 48, 60, or 72 months). It helps you evaluate how extra down payments reduce monthly installments before visiting a dealership.'
+  },
+  {
+    id: 'faq-24',
+    category: 'general',
+    question: 'What is included in a Finance Calculator for India?',
+    answer: 'A Finance Calculator for India includes localized planners like SIP (Systematic Investment Plan), EPF (Employee Provident Fund), PPF (Public Provident Fund), NPS (National Pension System), HRA tax exemption calculators, Gratuity estimation, and GST computation alongside Indian Rupee (₹) currency formatting.'
+  },
+  {
+    id: 'faq-25',
+    category: 'general',
+    question: 'How does a personal loan EMI calculator work?',
+    answer: 'A personal loan EMI calculator uses the standard loan amortization formula: EMI = [P × R × (1+R)^N] / [(1+R)^N - 1], where P is loan principal, R is monthly interest rate, and N is tenure in months. It displays your monthly installment, total interest paid over the tenure, and a month-by-month principal reduction chart.'
+  },
+  {
+    id: 'faq-26',
+    category: 'general',
+    question: 'How does a finance calculator estimate total purchase price and interest cost?',
+    answer: 'A finance calculator price model takes the sticker price of an asset (car, equipment, or house) and adds interest rates, sales taxes, dealer fees, and loan durations to compute the true total out-of-pocket price. This prevents buyers from overpaying due to hidden financing costs.'
+  },
+  {
+    id: 'faq-27',
+    category: 'general',
+    question: 'How does a finance calculator home loan tool calculate mortgage EMI?',
+    answer: 'A home loan EMI calculator computes monthly mortgage payments using home purchase price, down payment (e.g., 20%), annual interest rate, and loan tenure (such as 15 or 30 years). It factors in principal, interest, annual property tax rates, homeowners insurance, and HOA fees to show your total PITI monthly cost.'
+  },
+  {
+    id: 'faq-28',
+    category: 'investing',
+    question: 'How does an investment finance calculator simulate compound wealth?',
+    answer: 'An investment finance calculator models compound growth by taking your initial principal, recurring monthly contributions, expected rate of return (e.g., 8-12%), and time horizon. It projects total invested capital, total compound interest earned, and milestone ages for financial independence.'
+  },
+  {
+    id: 'faq-29',
+    category: 'general',
+    question: 'How does FutureFund compare to a physical Casio financial calculator (like Casio FC-200V / FC-100V)?',
+    answer: 'While physical Casio financial calculators (such as FC-200V, FC-100V, or HP 10bII) require memorizing key sequences (N, I/Y, PV, PMT, FV) on a small LCD screen, FutureFund offers an instant visual web interface. It generates interactive compounding charts, year-by-year schedule breakdowns, multi-currency support (USD, INR, EUR, GBP), and printable financial roadmaps directly in your web browser.'
   }
 ];

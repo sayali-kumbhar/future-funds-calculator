@@ -20,6 +20,7 @@ export const calculator: CalculatorConfig = {
     { key: 'salesTax', label: 'State Sales Tax Rate (%)', type: 'number', defaultValue: 7, min: 0, max: 20, isPercent: true }
   ],
   faqs: [
+    { question: 'How is a vehicle finance calculator used to compute car loan payments?', answer: 'A vehicle finance calculator works by taking the vehicle purchase price, down payment, trade-in value, interest rate, and loan term in months to calculate your exact monthly installment (EMI), total interest payable, and overall car ownership cost.' },
     { question: 'What is a typical down payment on a car loan?', answer: 'Financial planners typically recommend putting down at least 10% to 20% of the vehicle price. A larger down payment reduces your loan principal, monthly payment, and total interest cost.' },
     { question: 'How do loan terms affect car payment interest?', answer: 'Shorter terms (e.g. 36-48 months) have higher monthly payments but lower total interest. Longer terms (e.g. 72-84 months) reduce monthly payments but significantly increase the total interest paid over the life of the loan.' },
     { question: 'How is sales tax calculated in auto financing?', answer: 'Auto sales tax is generally calculated on the purchase price of the vehicle, sometimes after subtracting trade-in allowance. It is typically rolled into the total loan principal if not paid upfront.' }

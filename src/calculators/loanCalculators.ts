@@ -156,6 +156,8 @@ export const LOAN_CALCULATORS: CalculatorConfig[] = [
       { key: 'annualRate', label: 'Annual Interest Rate (%)', type: 'number', defaultValue: 5.5, isPercent: true },
     ],
     faqs: [
+      { question: 'How is a personal loan EMI calculator used to compute installments?', answer: 'A personal loan EMI calculator determines your exact monthly payment by taking your principal borrowing amount, interest rate (e.g. 10.5%), and loan term (e.g. 12 to 60 months) using the standard amortization formula.' },
+      { question: 'What is the formula behind a personal loan EMI calculator?', answer: 'The formula is EMI = P × r × (1+r)^n / [(1+r)^n - 1], where P is principal loan amount, r is monthly interest rate, and n is duration in months.' },
       { question: 'What is an Amortization Schedule?', answer: 'A calendar breakdown showing how each monthly payment is divided between paying down interest and principal. Early in the loan, payments are mostly interest; later, they are mostly principal.' },
       { question: 'Can I pay off loans early to save interest?', answer: 'Yes! Most consumer loans allow prepayment. Adding extra principal payments saves interest and shortens the loan timeline.' }
     ],

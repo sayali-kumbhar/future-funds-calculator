@@ -18,7 +18,7 @@ export default function AboutPage({ onGoToCalculator }: AboutPageProps) {
             Democratizing the Math of <span className="text-emerald-600">Financial Freedom</span>
           </h1>
           <p className="text-lg text-gray-500 dark:text-gray-400 leading-relaxed">
-            We build beautiful, highly accessible financial simulation tools designed to strip away complexity, exposing the sheer mathematical power of consistent investing.
+            <strong>FutureFund — Financial Calculators & Money Planning Tools</strong> provides 30+ interactive financial calculators and 500+ free educational guides to help individuals calculate compound growth, plan retirement, and build long-term wealth with precision.
           </p>
         </section>
 

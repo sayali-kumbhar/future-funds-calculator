@@ -30,12 +30,12 @@ export function resolveMetadata(
 
   switch (page) {
     case 'home':
-      title = "FutureFund | Design Your Financial Freedom & SIP Planner";
-      description = "Calculate your financial freedom age, simulate what-if investment scenarios, and generate a customized compound growth roadmap with our interactive SIP planner.";
+      title = "FutureFund — Financial Calculators & Money Planning Tools";
+      description = "Access 30+ free financial calculators, compound interest modeling tools, retirement simulators, and 500+ expert wealth-building guides on FutureFund.";
       url = origin;
       break;
     case 'about':
-      title = 'About Our Financial Freedom Mission | FutureFund';
+      title = 'About Our Mission | FutureFund — Financial Calculators & Money Planning Tools';
       description = 'Learn about the mission of FutureFund: empowering individuals to achieve financial independence early through simple, visual, mathematically sound planning tools.';
       url = `${origin}/about`;
       break;
@@ -49,7 +49,7 @@ export function resolveMetadata(
         const post = blogData.find(b => b.slug === blogSlug);
         const resolvedTitle = blogTitle || post?.title || 'Financial Insights';
         const resolvedDesc = post?.summary || `Read our comprehensive guide on "${resolvedTitle}". Learn the strategy to compound your wealth and reach financial independence early.`;
-        title = `${resolvedTitle} | FutureFund Blog`;
+        title = `${resolvedTitle} | FutureFund`;
         description = resolvedDesc;
         url = `${origin}/blog/${blogSlug}`;
         type = 'article';
@@ -59,11 +59,11 @@ export function resolveMetadata(
       if (calculatorSlug) {
         const calc = CALCULATORS_LIST.find(c => c.slug === calculatorSlug);
         const resolvedName = calculatorName || calc?.name || 'Interactive Planner';
-        title = calc?.metaTitle || `${resolvedName} | FutureFund Financial Tools`;
+        title = calc?.metaTitle || `${resolvedName} Calculator | FutureFund`;
         description = calc?.metaDesc || `Run simulations on the ${resolvedName}. Use interactive compound formulas to project your future savings, investments, and financial independence timeline.`;
         url = `${origin}/calculators/${calculatorSlug}`;
       } else {
-        title = '30+ Interactive Financial Independence Calculators | FutureFund';
+        title = '30+ Interactive Financial Calculators & Money Planning Tools | FutureFund';
         description = 'Access our complete catalog of 30+ interactive SIP, compound interest, loan prepayments, inflation calculators, and FIRE planners.';
         url = `${origin}/calculators`;
       }
@@ -74,7 +74,7 @@ export function resolveMetadata(
       url = `${origin}/faq`;
       break;
     case 'contact':
-      title = 'Contact Support & Financial Planning Team | FutureFund';
+      title = 'Contact Support & Planning Team | FutureFund';
       description = 'Get in touch with the FutureFund support team. Reach out for feedback, questions, or general inquiries about our financial planning calculators.';
       url = `${origin}/contact`;
       break;
@@ -104,9 +104,24 @@ export function resolveMetadata(
       url = `${origin}/sitemap`;
       break;
     case 'robots':
-      title = 'robots.txt Crawler Rules & Specifications | FutureFund';
+      title = 'robots.txt Crawler Rules | FutureFund';
       description = 'View the web crawler robots.txt rule specifications for search engine indexing crawlers.';
       url = `${origin}/robots`;
+      break;
+    case 'not-found':
+      title = '404 - Page Not Found | FutureFund';
+      description = 'The financial calculator page or guide you requested could not be found. Explore our 30+ money calculators or return home.';
+      url = `${origin}/404`;
+      break;
+    case 'server-error':
+      title = '500 - Application Error | FutureFund';
+      description = 'An unexpected calculation error occurred. Reset your local storage cache or return to the homepage.';
+      url = `${origin}/500`;
+      break;
+    case 'maintenance':
+      title = '503 - System Upgrades & Maintenance | FutureFund';
+      description = 'FutureFund is undergoing scheduled performance upgrades. Try our offline local calculators or check back shortly.';
+      url = `${origin}/maintenance`;
       break;
   }
 
@@ -142,7 +157,7 @@ export function generateJsonLdSchema(
   const organizationSchema = {
     '@type': 'Organization',
     '@id': `${origin}/#organization`,
-    'name': 'FutureFund',
+    'name': 'FutureFund — Financial Calculators & Money Planning Tools',
     'url': origin,
     'logo': {
       '@type': 'ImageObject',
@@ -164,8 +179,8 @@ export function generateJsonLdSchema(
     '@type': 'WebSite',
     '@id': `${origin}/#website`,
     'url': origin,
-    'name': 'FutureFund',
-    'description': 'Interactive SaaS compound planners and customized financial independence calculators.',
+    'name': 'FutureFund — Financial Calculators & Money Planning Tools',
+    'description': '30+ Free Interactive Financial Calculators, Wealth Planning Tools, and Personal Finance Guides.',
     'publisher': {
       '@id': `${origin}/#organization`
     },
@@ -263,6 +278,29 @@ export function generateJsonLdSchema(
       };
       schemas.push(articleSchema);
     }
+  }
+
+  // 6. Conditionally add SoftwareApplication / WebApplication Schema for calculators
+  if (page === ('calculators' as Page) && calculatorSlug) {
+    const calc = CALCULATORS_LIST.find(c => c.slug === calculatorSlug);
+    const resolvedName = calculatorName || calc?.name || 'Financial Calculator';
+    const appSchema = {
+      '@type': 'SoftwareApplication',
+      '@id': `${currentUrl}#software`,
+      'name': `${resolvedName} Calculator - FutureFund — Financial Calculators & Money Planning Tools`,
+      'operatingSystem': 'Any',
+      'applicationCategory': 'FinanceApplication',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      },
+      'description': calc?.metaDesc || calc?.explanation || `Free interactive ${resolvedName} tool on FutureFund — Financial Calculators & Money Planning Tools.`,
+      'publisher': {
+        '@id': `${origin}/#organization`
+      }
+    };
+    schemas.push(appSchema);
   }
 
   // 6. Conditionally add FAQ Schema (for /faq page or blog-post pages with FAQs)

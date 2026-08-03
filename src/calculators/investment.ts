@@ -19,6 +19,8 @@ export const calculator: CalculatorConfig = {
       { key: 'returnRate', label: 'Expected Yield (%)', type: 'number', defaultValue: 9.5, isPercent: true },
     ],
     faqs: [
+      { question: 'How does a finance calculator investment tool simulate wealth growth?', answer: 'A finance calculator investment tool takes your initial principal, ongoing recurring contributions, expected yield (e.g. 8-12%), and duration in years to chart compound wealth expansion and principal growth over time.' },
+      { question: 'How does FutureFund compare to a physical Casio financial calculator (FC-200V / FC-100V)?', answer: 'Unlike physical Casio TVM calculators that require complex button combinations and mono LCD displays, FutureFund provides an intuitive visual web interface with real-time interactive charts, annual growth tables, and multi-currency formatting.' },
       { question: 'What expected return should I model?', answer: 'US and Indian broad-market indexes have historically achieved 10% to 13% average annual returns before inflation over multi-decade periods.' },
       { question: 'How do index funds simplify investing?', answer: 'They bundle hundreds of top companies into a single cheap basket, providing automatic diversification and matching overall market momentum.' }
     ],

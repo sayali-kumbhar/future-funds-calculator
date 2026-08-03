@@ -67,7 +67,7 @@ function generateRobots() {
   console.log('Generating robots.txt...');
 
   const robots = `# https://www.robotstxt.org/robotstxt.html
-# FreeFinanceCal Crawler Specification - July 2026
+# FutureFund — Financial Calculators & Money Planning Tools Crawler Specification - 2026
 
 User-agent: *
 Allow: /
@@ -90,6 +90,18 @@ Sitemap: ${BASE_URL}/sitemap.xml
   console.log('Successfully generated robots.txt!');
 }
 
+function generateAdsTxt() {
+  console.log('Generating ads.txt...');
+
+  const adsTxt = `# FutureFund — Financial Calculators & Money Planning Tools Authorized Digital Sellers (ads.txt)
+# Replace pub-0000000000000000 with your actual Google AdSense Publisher ID
+google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
+`;
+
+  fs.writeFileSync(path.join(PUBLIC_DIR, 'ads.txt'), adsTxt, 'utf-8');
+  console.log('Successfully generated ads.txt!');
+}
+
 function main() {
   try {
     if (!fs.existsSync(PUBLIC_DIR)) {
@@ -97,6 +109,7 @@ function main() {
     }
     generateSitemap();
     generateRobots();
+    generateAdsTxt();
     console.log('SEO static files generation complete.');
   } catch (error) {
     console.error('Failed to generate SEO static files:', error);
