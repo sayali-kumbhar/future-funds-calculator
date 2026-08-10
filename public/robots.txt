@@ -15,4 +15,4 @@ Disallow: /assets/.aistudio/
 Disallow: /node_modules/
 Disallow: /dist/
 
-Sitemap: https://ais-dev-ebqpux64scfagtipejtjsf-961875300714.asia-southeast1.run.app/sitemap.xml
+Sitemap: https://future-funds-calculator.vercel.app/sitemap.xml

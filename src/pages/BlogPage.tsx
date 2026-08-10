@@ -28,6 +28,7 @@ import {
 import { blogData as initialBlogData } from '../data/blogData';
 import { CALCULATORS_LIST } from '../data/calculatorsData';
 import { BlogPost, Page } from '../types';
+import { formatBlogPostText } from '../utils/autolink';
 
 interface BlogPageProps {
   selectedPostSlug?: string | null;
@@ -660,7 +661,7 @@ export default function BlogPage({}: BlogPageProps) {
                                   {bodyRows.map((row, rIdx) => (
                                     <tr key={rIdx} className="hover:bg-gray-50 dark:hover:bg-gray-900/40">
                                       {row.map((cell, cIdx) => (
-                                        <td key={cIdx} className="px-4 py-3 text-gray-600 dark:text-gray-300 font-medium" dangerouslySetInnerHTML={{ __html: cell.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}></td>
+                                        <td key={cIdx} className="px-4 py-3 text-gray-600 dark:text-gray-300 font-medium" dangerouslySetInnerHTML={{ __html: formatBlogPostText(cell) }}></td>
                                       ))}
                                     </tr>
                                   ))}
@@ -678,7 +679,7 @@ export default function BlogPage({}: BlogPageProps) {
                           const listItems = items.map((item, itemIdx) => {
                             const cleanText = item.replace(/^\d+\.\s+/, '').replace(/^-\s+/, '');
                             return (
-                              <li key={itemIdx} className="pl-1 text-gray-600 dark:text-gray-300 font-normal leading-relaxed text-sm py-1" dangerouslySetInnerHTML={{ __html: cleanText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}></li>
+                              <li key={itemIdx} className="pl-1 text-gray-600 dark:text-gray-300 font-normal leading-relaxed text-sm py-1" dangerouslySetInnerHTML={{ __html: formatBlogPostText(cleanText) }}></li>
                             );
                           });
 
@@ -689,9 +690,9 @@ export default function BlogPage({}: BlogPageProps) {
                           );
                         }
 
-                        // Normal paragraph (supports raw bold translation)
+                        // Normal paragraph (supports raw bold translation and keyword auto-linking)
                         return (
-                          <p key={pIdx} className="leading-relaxed animate-fade-in" dangerouslySetInnerHTML={{ __html: paragraph.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}></p>
+                          <p key={pIdx} className="leading-relaxed animate-fade-in" dangerouslySetInnerHTML={{ __html: formatBlogPostText(paragraph) }}></p>
                         );
                       })}
                     </div>

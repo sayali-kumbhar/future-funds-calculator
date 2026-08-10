@@ -3,7 +3,7 @@ import path from 'path';
 import { blogData } from '../src/data/blogData';
 import { CALCULATORS_LIST } from '../src/data/calculatorsData';
 
-const BASE_URL = 'https://ais-dev-ebqpux64scfagtipejtjsf-961875300714.asia-southeast1.run.app';
+const BASE_URL = process.env.VITE_SITE_URL || process.env.SITE_URL || 'https://future-funds-calculator.vercel.app';
 const PUBLIC_DIR = path.join(process.cwd(), 'public');
 
 function generateSitemap() {

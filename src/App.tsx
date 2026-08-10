@@ -14,6 +14,7 @@ import {
 import { Page } from './types';
 
 import useDarkMode from './hooks/useDarkMode';
+import { initIdlePrefetch } from './utils/prefetch';
 
 // Global Context
 import { AppProvider } from './context/AppContext';
@@ -59,8 +60,27 @@ function getSEOPageFromPathname(pathname: string): Page {
   const cleanPath = pathname.replace(/^\//, '');
   if (!cleanPath) return 'home';
   if (cleanPath.startsWith('blog/')) return 'blog-post';
-  if (cleanPath.startsWith('calculators/')) return 'calculators' as Page;
-  if (['about', 'blog', 'contact', 'faq', 'privacy', 'terms', 'disclaimer', 'cookie', 'sitemap', 'robots'].includes(cleanPath)) {
+  if (cleanPath.startsWith('calculators/')) return 'calculators';
+  if ([
+    'about',
+    'blog',
+    'calculators',
+    'ai-blueprint',
+    'learn',
+    'quizzes',
+    'budget-planner',
+    'goal-tracker',
+    'net-worth-tracker',
+    'roadmap',
+    'contact',
+    'faq',
+    'privacy',
+    'terms',
+    'disclaimer',
+    'cookie',
+    'sitemap',
+    'robots'
+  ].includes(cleanPath)) {
     return cleanPath as Page;
   }
   if (cleanPath === '404') return 'not-found';
@@ -73,6 +93,10 @@ function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
   const [darkMode, setDarkMode] = useDarkMode();
+
+  useEffect(() => {
+    initIdlePrefetch();
+  }, []);
 
   // Dynamic SEO meta tags and titles based on the active path
   const page = getSEOPageFromPathname(location.pathname);

@@ -30,25 +30,25 @@ export function resolveMetadata(
 
   switch (page) {
     case 'home':
-      title = "FutureFund — Financial Calculators & Money Planning Tools";
-      description = "Access 30+ free financial calculators, compound interest modeling tools, retirement simulators, and 500+ expert wealth-building guides on FutureFund.";
+      title = "FutureFund — Free Online Finance Calculators, EMI & Investment Planners";
+      description = "Discover what is a finance calculator and how to use it. Compute vehicle auto loans, personal loan EMIs, home loan mortgages, SIP investments, and FIRE retirement targets with instant compounding charts.";
       url = origin;
       break;
     case 'about':
-      title = 'About Our Mission | FutureFund — Financial Calculators & Money Planning Tools';
-      description = 'Learn about the mission of FutureFund: empowering individuals to achieve financial independence early through simple, visual, mathematically sound planning tools.';
+      title = 'About FutureFund | Finance Calculator Guide & Wealth Tools';
+      description = 'Learn how to use a finance calculator for vehicle loans, personal loan EMIs, home mortgages, and SIP investments. Explore our mission for transparent, free money tools in India and worldwide.';
       url = `${origin}/about`;
       break;
     case 'blog':
-      title = 'Financial Freedom Blog: FIRE, SIP & Investing Insights | FutureFund';
-      description = 'Read expert articles on the FIRE movement, compound interest, Systematic Investment Plans (SIP), tax savings, and smart personal finance strategies.';
+      title = 'Financial Freedom Blog: How to Use a Finance Calculator & Money Guides | FutureFund';
+      description = 'Read expert money guides on how to use a finance calculator, vehicle auto loan financing, home loan mortgage EMIs, SIP mutual funds, personal loan payoff, and FIRE retirement planning.';
       url = `${origin}/blog`;
       break;
     case 'blog-post':
       if (blogSlug) {
         const post = blogData.find(b => b.slug === blogSlug);
         const resolvedTitle = blogTitle || post?.title || 'Financial Insights';
-        const resolvedDesc = post?.summary || `Read our comprehensive guide on "${resolvedTitle}". Learn the strategy to compound your wealth and reach financial independence early.`;
+        const resolvedDesc = post?.summary || `Read our expert guide on "${resolvedTitle}". Learn how to use a finance calculator to model wealth growth and reach financial independence early.`;
         title = `${resolvedTitle} | FutureFund`;
         description = resolvedDesc;
         url = `${origin}/blog/${blogSlug}`;
@@ -60,67 +60,102 @@ export function resolveMetadata(
         const calc = CALCULATORS_LIST.find(c => c.slug === calculatorSlug);
         const resolvedName = calculatorName || calc?.name || 'Interactive Planner';
         title = calc?.metaTitle || `${resolvedName} Calculator | FutureFund`;
-        description = calc?.metaDesc || `Run simulations on the ${resolvedName}. Use interactive compound formulas to project your future savings, investments, and financial independence timeline.`;
+        description = calc?.metaDesc || `Use the ${resolvedName} finance calculator to compute monthly installments, interest costs, and compound wealth projections with interactive charts.`;
         url = `${origin}/calculators/${calculatorSlug}`;
       } else {
-        title = '30+ Interactive Financial Calculators & Money Planning Tools | FutureFund';
-        description = 'Access our complete catalog of 30+ interactive SIP, compound interest, loan prepayments, inflation calculators, and FIRE planners.';
+        title = '30+ Free Finance Calculators — Car, Home Loan EMI, Personal Loan & SIP | FutureFund';
+        description = 'Access 30+ free web tools: vehicle finance calculator, home loan EMI calculator, personal loan EMI calculator, Finance Calculator India (SIP, EPF, PPF), and compound growth estimators.';
         url = `${origin}/calculators`;
       }
       break;
     case 'faq':
-      title = 'Financial Freedom & Compound Interest FAQ | FutureFund';
-      description = 'Get answers to 20 of the most common questions about SIP, the 4% rule of retirement, compound interest, and how our interactive wealth calculators work.';
+      title = 'Finance Calculator FAQ — Vehicle Loans, Home Loan EMI & Investment Tools | FutureFund';
+      description = 'Find answers to what is a finance calculator, how to use a vehicle finance calculator, calculate personal loan EMIs, home mortgage costs, and compare web tools with Casio financial calculators.';
       url = `${origin}/faq`;
       break;
     case 'contact':
-      title = 'Contact Support & Planning Team | FutureFund';
-      description = 'Get in touch with the FutureFund support team. Reach out for feedback, questions, or general inquiries about our financial planning calculators.';
+      title = 'Contact Support & Money Planning Team | FutureFund';
+      description = 'Contact the FutureFund support team with questions or feedback on how to use our finance calculator tools, loan EMI calculators, or investment planners.';
       url = `${origin}/contact`;
       break;
     case 'privacy':
       title = 'Privacy Policy | FutureFund';
-      description = 'Understand how FutureFund protects your privacy. We process and store 100% of your financial planning variables locally on your device.';
+      description = 'Understand how FutureFund protects your privacy. Our finance calculators store 100% of your input data locally on your device without transmitting personal financial details.';
       url = `${origin}/privacy`;
       break;
     case 'terms':
       title = 'Terms & Conditions | FutureFund';
-      description = 'Read the terms of service and usage conditions for the FutureFund compound estimators and interactive planners.';
+      description = 'Read the terms of service for using FutureFund finance calculator tools, home loan EMI calculators, and investment compound estimators.';
       url = `${origin}/terms`;
       break;
     case 'disclaimer':
       title = 'Financial Disclaimer | FutureFund';
-      description = 'Important legal disclaimer: FutureFund is an educational suite of calculators and does not constitute certified financial or advisory advice.';
+      description = 'Important legal disclaimer: FutureFund provides educational finance calculator tools and does not constitute certified financial or advisory advice.';
       url = `${origin}/disclaimer`;
       break;
     case 'cookie':
       title = 'Cookie Policy | FutureFund';
-      description = 'Review how we use essential browser local storage to save your latest calculator variables locally on your device.';
+      description = 'Review how FutureFund uses essential browser local storage to preserve your finance calculator parameters locally on your device.';
       url = `${origin}/cookie`;
       break;
+    case 'roadmap':
+      title = 'Financial Freedom Roadmap — Chronological Wealth Strategy | FutureFund';
+      description = 'Generate a personalized, year-by-year financial independence roadmap. Compute milestone targets, age of freedom, and asset allocation strategy.';
+      url = `${origin}/roadmap`;
+      break;
+    case 'ai-blueprint':
+      title = 'AI Wealth Blueprint Generator — Custom Financial Roadmap | FutureFund';
+      description = 'Create an elite, AI-customized chronological roadmap to secure your financial freedom, complete with milestone targets and wealth allocations.';
+      url = `${origin}/ai-blueprint`;
+      break;
+    case 'learn':
+      title = 'Financial Freedom Learning Hub & Dictionary | FutureFund';
+      description = 'Master essential money concepts, vehicle finance calculators, home loan EMIs, SIP mutual funds, and FIRE retirement strategies.';
+      url = `${origin}/learn`;
+      break;
+    case 'quizzes':
+      title = 'Financial Independence Quizzes & Money IQ Test | FutureFund';
+      description = 'Test your personal finance knowledge with interactive wealth building, compound interest, and retirement planning quizzes.';
+      url = `${origin}/quizzes`;
+      break;
+    case 'budget-planner':
+      title = '50/30/20 Interactive Budget Planner | FutureFund';
+      description = 'Calculate your monthly budget allocations using the 50/30/20 rule. Optimize needs, wants, and savings goals automatically.';
+      url = `${origin}/budget-planner`;
+      break;
+    case 'goal-tracker':
+      title = 'Financial Goal Tracker & Target Savings Calculator | FutureFund';
+      description = 'Set, track, and visualize your financial goals with precise monthly savings requirements and target completion dates.';
+      url = `${origin}/goal-tracker`;
+      break;
+    case 'net-worth-tracker':
+      title = 'Net Worth Tracker & Balance Sheet Calculator | FutureFund';
+      description = 'Track your net worth by balancing your liquid assets, investments, real estate, and debt liabilities in real time.';
+      url = `${origin}/net-worth-tracker`;
+      break;
     case 'sitemap':
-      title = 'Interactive XML Sitemap & Directory | FutureFund';
-      description = 'Browse the complete structured site directory and dynamic sitemap for the FutureFund planning platform.';
+      title = 'Interactive XML Sitemap & Finance Calculator Directory | FutureFund';
+      description = 'Explore the full sitemap directory of FutureFund finance calculators, loan EMI tools, investment planners, and financial education guides.';
       url = `${origin}/sitemap`;
       break;
     case 'robots':
-      title = 'robots.txt Crawler Rules | FutureFund';
-      description = 'View the web crawler robots.txt rule specifications for search engine indexing crawlers.';
+      title = 'robots.txt Search Engine Rules | FutureFund';
+      description = 'View the web crawler specifications and search engine indexing rules for FutureFund financial calculator pages.';
       url = `${origin}/robots`;
       break;
     case 'not-found':
-      title = '404 - Page Not Found | FutureFund';
-      description = 'The financial calculator page or guide you requested could not be found. Explore our 30+ money calculators or return home.';
+      title = '404 - Finance Calculator Page Not Found | FutureFund';
+      description = 'The requested finance calculator page or money guide could not be found. Explore our 30+ tools including vehicle loan EMI, home loan mortgage, and compound interest planners.';
       url = `${origin}/404`;
       break;
     case 'server-error':
-      title = '500 - Application Error | FutureFund';
-      description = 'An unexpected calculation error occurred. Reset your local storage cache or return to the homepage.';
+      title = '500 - Application Calculation Error | FutureFund';
+      description = 'An unexpected calculation or system error occurred. Reset your local storage cache or return to the main finance calculator homepage.';
       url = `${origin}/500`;
       break;
     case 'maintenance':
       title = '503 - System Upgrades & Maintenance | FutureFund';
-      description = 'FutureFund is undergoing scheduled performance upgrades. Try our offline local calculators or check back shortly.';
+      description = 'FutureFund is undergoing scheduled performance updates. Try our offline local finance calculators or check back shortly.';
       url = `${origin}/maintenance`;
       break;
   }

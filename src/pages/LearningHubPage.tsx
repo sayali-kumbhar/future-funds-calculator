@@ -90,7 +90,13 @@ const FINANCE_TERMS: Term[] = [
   { word: "Yield", definition: "The income return on an investment, such as interest or dividends, expressed as an annual percentage of the asset's value.", category: "Glossary", topic: "Investing" },
   { word: "Year-to-Date (YTD)", definition: "The period of time extending from the first day of the current calendar or fiscal year up to the present date.", category: "Dictionary", topic: "Basic Finance" },
   { word: "Zero-Coupon Bond", definition: "A debt security that does not pay periodic interest but is sold at a deep discount, maturing at its full face value.", category: "Dictionary", topic: "Investing" },
-  { word: "Zero-Sum Game", definition: "A situation or economic model in which one participant's gain or loss is exactly balanced by the losses or gains of the other participants.", category: "Glossary", topic: "Economics" }
+  { word: "Zero-Sum Game", definition: "A situation or economic model in which one participant's gain or loss is exactly balanced by the losses or gains of the other participants.", category: "Glossary", topic: "Economics" },
+  { word: "Finance Calculator", definition: "An interactive digital application used to calculate time value of money, compound growth, loan EMIs, and long-term investment projections.", category: "Glossary", topic: "Basic Finance", example: "Using a web finance calculator to compare a 15-year vs. 30-year home mortgage." },
+  { word: "Vehicle Finance Calculator", definition: "A specialized auto loan calculator that determines monthly car payments, sales tax, down payment savings, and total loan price.", category: "Dictionary", topic: "Loans" },
+  { word: "Personal Loan EMI Calculator", definition: "A calculator used to determine fixed monthly installments, total interest charges, and payoff schedules for unsecured personal loans.", category: "Dictionary", topic: "Loans", formula: "EMI = [P x R x (1+R)^N]/[(1+R)^N - 1]" },
+  { word: "Home Loan EMI Calculator", definition: "A mortgage calculator designed to break down monthly principal, interest, taxes, and amortization schedules for home loans.", category: "Dictionary", topic: "Loans" },
+  { word: "Finance Calculator India", definition: "Localized financial calculation tools tailored for Indian investors, covering SIP mutual funds, PPF, EPF, HRA tax exemptions, and INR formatting.", category: "Glossary", topic: "Investing" },
+  { word: "Casio Financial Calculator", definition: "Hardware financial calculators (e.g. Casio FC-200V or FC-100V) featuring built-in keys for TVM, simple interest, and cash flow analysis.", category: "Dictionary", topic: "Basic Finance" }
 ];
 
 // Country Guides Data
@@ -446,7 +452,7 @@ export default function LearningHubPage() {
       )}
 
       {activeTab === 'guides' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in">
           {/* Retirement playbook */}
           <div className="p-8 rounded-2xl border border-gray-200 dark:border-gray-850 bg-white dark:bg-gray-900 space-y-6">
             <div className="flex items-center space-x-3 text-emerald-600 dark:text-emerald-400">
@@ -505,6 +511,37 @@ export default function LearningHubPage() {
             <div className="pt-4 border-t border-gray-100 dark:border-gray-800 text-center">
               <Link to="/calculators/fire" className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
                 Compare FIRE target models
+              </Link>
+            </div>
+          </div>
+
+          {/* Finance Calculator User Playbook */}
+          <div className="p-8 rounded-2xl border border-gray-200 dark:border-gray-850 bg-white dark:bg-gray-900 space-y-6">
+            <div className="flex items-center space-x-3 text-emerald-600 dark:text-emerald-400">
+              <BookOpen className="h-6 w-6" />
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">How to Use a Finance Calculator</h3>
+            </div>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              Understand how to model vehicle financing, personal loan EMIs, home loans, and investment growth schedules with precision.
+            </p>
+            <div className="space-y-4">
+              {[
+                { title: "Vehicle Finance Calculator", text: "Input vehicle price, interest rate, down payment, and loan tenure to calculate monthly auto loan installments." },
+                { title: "Home & Personal Loan EMI", text: "Determine principal vs interest split, amortization curves, and pre-payment savings." },
+                { title: "Finance Calculator India", text: "Utilize localized SIP, EPF, PPF, and HRA calculators formatted in Indian Rupees (₹)." }
+              ].map((step, idx) => (
+                <div key={idx} className="flex gap-3">
+                  <CheckCircle className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="text-xs font-bold text-gray-900 dark:text-white">{step.title}</h4>
+                    <p className="text-[11px] text-gray-550 dark:text-gray-450 leading-relaxed">{step.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="pt-4 border-t border-gray-100 dark:border-gray-800 text-center">
+              <Link to="/calculators" className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
+                Explore all 30+ money calculators
               </Link>
             </div>
           </div>

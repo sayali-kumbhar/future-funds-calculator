@@ -50,6 +50,13 @@ export default function SEOHead({
     updateMetaTag('description', description);
     updateMetaTag('keywords', DEFAULT_SEO.DEFAULT_KEYWORDS);
 
+    // Google Search Console Verification
+    const gscEnv = (import.meta as unknown as { env?: { VITE_GOOGLE_SITE_VERIFICATION?: string } }).env;
+    const gscVerification = gscEnv?.VITE_GOOGLE_SITE_VERIFICATION;
+    if (gscVerification) {
+      updateMetaTag('google-site-verification', gscVerification);
+    }
+
     // Open Graph Tags
     updateMetaTag('og:title', title, true);
     updateMetaTag('og:description', description, true);

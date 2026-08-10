@@ -4,6 +4,7 @@ import { NavLink, Link } from 'react-router-dom';
 import { Page } from '../types';
 import { useApp } from '../context/AppContext';
 import { SUPPORTED_CURRENCIES, SUPPORTED_COUNTRIES } from '../data/currenciesData';
+import { prefetchRoute } from '../utils/prefetch';
 
 interface NavbarProps {
   currentPage?: Page | 'calculators' | 'ai-blueprint';
@@ -64,6 +65,7 @@ export default function Navbar({
                 key={item.page}
                 id={`nav-${item.page}`}
                 to={path}
+                onMouseEnter={() => prefetchRoute(item.page)}
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className={({ isActive }) => {
                   const isBlogActive = item.page === 'blog' && (window.location.pathname === '/blog' || window.location.pathname.startsWith('/blog/'));
