@@ -23,7 +23,7 @@ export default function SEOHead({
     const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
     const canonicalUrl = `${origin}${pathname}`;
 
-    const { title, description, url, type } = resolveMetadata(
+    const { title, description, url, type, keywords } = resolveMetadata(
       page,
       blogTitle,
       blogSlug,
@@ -48,7 +48,7 @@ export default function SEOHead({
     };
 
     updateMetaTag('description', description);
-    updateMetaTag('keywords', DEFAULT_SEO.DEFAULT_KEYWORDS);
+    updateMetaTag('keywords', keywords || DEFAULT_SEO.DEFAULT_KEYWORDS);
 
     // Google Search Console Verification
     const gscEnv = (import.meta as unknown as { env?: { VITE_GOOGLE_SITE_VERIFICATION?: string } }).env;
