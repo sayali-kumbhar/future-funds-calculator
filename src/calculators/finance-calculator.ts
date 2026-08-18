@@ -4,14 +4,14 @@ export const calculator: CalculatorConfig = {
   slug: 'finance-calculator',
   name: 'General Finance Calculator',
   category: 'savings_budget',
-  metaTitle: 'General Finance Calculator - Calculate Loans and Investment Growth',
-  metaDesc: 'Free online General Finance Calculator. Compare loan EMI repayment schedules and project the growth of compound investments in one unified, interactive tool.',
+  metaTitle: 'Finance Calculator: Real Return & Wealth Growth Model [2026]',
+  metaDesc: 'Calculate net future wealth with our free financial calculator. Adjust for inflation, tax drag, compound frequency, and regular monthly contributions.',
   primaryKeyword: 'finance calculator',
   formulaName: 'Loan Amortization & Compound Interest Models',
   formulaDesc: 'EMI = [P * r * (1 + r)^n]/[(1 + r)^n - 1] | Compounding Growth = P * (1 + r/n)^(nt)',
-  explanation: 'A dual-purpose, all-in-one financial planning tool. Switch between Loan Mode to compute borrowing EMIs and Investment Mode to compute compound savings growth and future portfolios over time.',
-  example: 'Use Loan Mode to find that a $250,000 loan at 6% over 20 years costs $1,791 monthly. Switch to Investment Mode to find that compounding $1,000 monthly at 8% for 20 years builds a $572,000 nest egg.',
-  relatedSlugs: ['loan', 'compound-interest', 'retirement'],
+  explanation: 'A dual-purpose, all-in-one financial projection engine. Switch between Investment Mode to compute compound wealth accumulation with regular additions, and Loan Mode to compute borrowing EMIs and amortization schedules.',
+  example: 'Use Investment Mode to discover that compounding $1,000 monthly at 8% annual return for 20 years builds a $572,941 portfolio. Switch to Loan Mode to calculate that a $250,000 mortgage at 6.5% over 30 years requires a $1,580 monthly payment.',
+  relatedSlugs: ['loan', 'compound-interest', 'retirement', 'sip-vs-lump-sum'],
   fields: [
     { key: 'calcMode', label: 'Calculator Mode', type: 'select', defaultValue: 'investment', options: [
       { label: 'Investment Growth Mode (Savings Accumulation)', value: 'investment' },
@@ -23,9 +23,10 @@ export const calculator: CalculatorConfig = {
     { key: 'term', label: 'Term Duration (Years)', type: 'number', defaultValue: 10, min: 1, max: 40 }
   ],
   faqs: [
-    { question: 'What is the main difference between Loan Mode and Investment Mode?', answer: 'Loan Mode calculates how your debt decreases over time as you make payments, showing total interest expenses. Investment Mode calculates how your assets increase over time as you invest and earn compounding interest.' },
-    { question: 'What is Compound Interest?', answer: 'Compound interest is interest earned on interest. Instead of withdrawing your interest gains, they remain in your account and earn interest themselves, accelerating your portfolio size over long horizons.' },
-    { question: 'How is the monthly compound formula structured here?', answer: 'For investments, the calculator assumes interest is compounded monthly and that contributions are added at the end of each month. For loans, it uses the standard banking amortization formula for monthly equal installments.' }
+    { question: 'What is the main difference between Loan Mode and Investment Mode?', answer: 'Loan Mode calculates how your debt decreases over time as you make payments, showing total interest expenses. Investment Mode calculates how your assets increase over time as you invest and earn compounding returns on your principal and monthly contributions.' },
+    { question: 'How does continuous compounding differ from monthly compounding?', answer: 'Continuous compounding calculates growth at an infinite frequency using the mathematical constant e (FV = P * e^(rt)). Monthly compounding (used by most retail investment funds) calculates interest 12 times a year (FV = P * (1 + r/12)^(12t)), delivering slightly lower but practically identical outcomes.' },
+    { question: 'How do I calculate real return after adjusting for inflation?', answer: 'To calculate real purchasing power, use the Fisher Equation: Real Rate = [(1 + Nominal Rate) / (1 + Inflation Rate)] - 1. For example, an 8% nominal market return with 3% inflation yields a real purchasing power growth rate of ~4.85% annually.' },
+    { question: 'Can this tool model both lump sum deposits and monthly contributions?', answer: 'Yes! Set your Starting Capital as the initial lump sum, and specify your Monthly Addition to project the blended compounding trajectory over your target horizon.' }
   ],
   calculate: (inputs, currency) => {
     const mode = inputs.calcMode || 'investment';

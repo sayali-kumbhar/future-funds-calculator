@@ -32,20 +32,20 @@ export function resolveMetadata(
 
   switch (page) {
     case 'home':
-      title = "FutureFund — Free Online Finance Calculators, EMI & Investment Planners";
-      description = "Discover what is a finance calculator and how to use it. Compute vehicle auto loans, personal loan EMIs, home loan mortgages, SIP investments, and FIRE retirement targets with instant compounding charts.";
+      title = "FutureFund: Free Financial & Retirement Calculators [2026]";
+      description = "Plan your wealth with 30+ free finance calculators. Project SIP compounding, calculate loan EMIs, plan FIRE retirement, and model passive income.";
       url = origin;
       keywords = "free financial calculator online, finance calculator, how to use finance calculator, vehicle finance calculator, car loan EMI calculator, auto loan payment calculator, personal loan EMI calculator, home loan EMI calculator, mortgage calculator, SIP calculator, step up SIP calculator, compound interest calculator, FIRE retirement calculator, 50/30/20 budget planner, net worth calculator, FutureFund";
       break;
     case 'about':
-      title = 'About FutureFund | Finance Calculator Guide & Wealth Tools';
-      description = 'Learn how to use a finance calculator for vehicle loans, personal loan EMIs, home mortgages, and SIP investments. Explore our mission for transparent, free money tools in India and worldwide.';
+      title = 'About FutureFund: Transparent Financial Calculators & Wealth Tools';
+      description = 'Discover FutureFund’s mission for 100% private, client-side financial planning tools. Zero trackers, no server storage, and institutional-grade math.';
       url = `${origin}/about`;
       keywords = "about FutureFund, how to use finance calculator, online finance calculator guide, wealth tools, free financial calculator online, loan EMI calculators";
       break;
     case 'blog':
-      title = 'Financial Freedom Blog: How to Use a Finance Calculator & Money Guides | FutureFund';
-      description = 'Read expert money guides on how to use a finance calculator, vehicle auto loan financing, home loan mortgage EMIs, SIP mutual funds, personal loan payoff, and FIRE retirement planning.';
+      title = 'Financial Freedom Blog: Smart Money & Investment Guides [2026]';
+      description = 'Expert personal finance guides on SIP investing, mutual fund caps, FIRE strategies, NPS rules, and loan elimination frameworks.';
       url = `${origin}/blog`;
       keywords = "financial freedom blog, personal finance guides, how to use finance calculator, auto loan payment guide, home loan mortgage EMI guide, SIP mutual fund guide, FIRE retirement strategy";
       break;
@@ -231,7 +231,16 @@ export function generateJsonLdSchema(
     },
     'sameAs': [
       'https://twitter.com/futurefund',
-      'https://github.com/futurefund'
+      'https://github.com/futurefund',
+      'https://linkedin.com/company/futurefund'
+    ],
+    'knowsAbout': [
+      'Personal Finance',
+      'Systematic Investment Planning (SIP)',
+      'Retirement Modeling & FIRE',
+      'Tax Optimization & NPS',
+      'Loan Amortization & Mortgages',
+      'Compound Interest Calculations'
     ]
   };
 
@@ -364,7 +373,7 @@ export function generateJsonLdSchema(
     schemas.push(appSchema);
   }
 
-  // 6. Conditionally add FAQ Schema (for /faq page or blog-post pages with FAQs)
+  // 6. Conditionally add FAQ Schema (for /faq page, calculators, or blog-post pages with FAQs)
   let faqItems: { question: string; answer: string }[] = [];
 
   if (page === 'faq') {
@@ -372,6 +381,14 @@ export function generateJsonLdSchema(
       question: item.question,
       answer: item.answer
     }));
+  } else if (page === ('calculators' as Page) && calculatorSlug) {
+    const calc = CALCULATORS_LIST.find(c => c.slug === calculatorSlug);
+    if (calc && calc.faqs && calc.faqs.length > 0) {
+      faqItems = calc.faqs.map(item => ({
+        question: item.question,
+        answer: item.answer
+      }));
+    }
   } else if (page === 'blog-post' && blogSlug) {
     const post = blogData.find(b => b.slug === blogSlug);
     if (post && post.faqs && post.faqs.length > 0) {

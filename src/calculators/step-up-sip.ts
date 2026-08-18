@@ -4,14 +4,14 @@ export const calculator: CalculatorConfig = {
   slug: 'step-up-sip',
   name: 'Step-Up SIP Calculator',
   category: 'investing',
-  metaTitle: 'Step-Up SIP Calculator - SIP Top-Up Wealth Estimator',
-  metaDesc: 'Calculate the compound growth of your Systematic Investment Plan (SIP) with an annual step-up or top-up percentage to match your growing income.',
+  metaTitle: 'Step-Up SIP Calculator: SIP Top-Up Wealth Estimator [2026]',
+  metaDesc: 'Calculate mutual fund SIP compounding with annual step-up top-ups. See how a 10% yearly contribution increase can double your final wealth corpus.',
   primaryKeyword: 'Step-Up SIP Calculator',
   formulaName: 'Step-Up SIP compounding model',
   formulaDesc: 'Yearly SIP = Previous Year SIP * (1 + Step-Up %)',
   explanation: 'Projects how increasing your monthly mutual fund investment amount by a small fixed percentage each year (to align with salary increments) dramatically accelerates your path to financial freedom.',
   example: 'Starting a ₹10,000 monthly SIP with a 10% annual step-up for 15 years at a 12% return yields ₹67.7 Lakhs, compared to just ₹50.5 Lakhs from a static, non-increasing SIP.',
-  relatedSlugs: ['compound-interest', 'investment', 'lump-sum'],
+  relatedSlugs: ['compound-interest', 'investment', 'lump-sum', 'sip-vs-lump-sum'],
   fields: [
     { key: 'monthlyInvestment', label: 'Initial Monthly Investment', type: 'number', defaultValue: 10000, isCurrency: true },
     { key: 'annualTopUp', label: 'Annual Step-Up / Top-Up (%)', type: 'number', defaultValue: 10, isPercent: true, min: 1, max: 50, step: 1 },
@@ -19,9 +19,9 @@ export const calculator: CalculatorConfig = {
     { key: 'years', label: 'Investment Period (Years)', type: 'number', defaultValue: 15, min: 1, max: 40 }
   ],
   faqs: [
-    { question: 'What is a Step-Up SIP?', answer: 'A Step-Up (or Top-Up) SIP is an automated mandate that raises your monthly mutual fund investment amount by a fixed percentage or absolute rupee value each year to track your growing income.' },
-    { question: 'Why is a Step-Up SIP so powerful?', answer: 'It counters lifestyle inflation and harnesses the power of back-ended compounding. A small 10% annual increase can double your final retirement corpus compared to a static investment.' },
-    { question: 'Are mutual fund platforms supportive of auto-step-up?', answer: 'Yes, almost all modern brokerage and mutual fund apps have an "Auto-Step Up" or "SIP Top-Up" toggle when setting up new Systematic Investment Plans.' }
+    { question: 'What is a Step-Up SIP and how does it work?', answer: 'A Step-Up (or Top-Up) SIP automatically raises your monthly investment commitment by a fixed percentage (e.g. 10%) or currency increment annually to keep pace with salary raises and beat inflation.' },
+    { question: 'Why does a 10% Step-Up create disproportionately larger wealth?', answer: 'Because compound interest is back-loaded, boosting your deposits every year increases the capital base exposed to compounding in the later years, frequently yielding 30% to 50% higher terminal wealth.' },
+    { question: 'What return rate should I assume for equity index mutual funds?', answer: 'Broad market equity indices (e.g. Nifty 50, S&P 500) have historically delivered long-term nominal annualized returns between 10% and 13% over 15+ year holding periods.' }
   ],
   calculate: (inputs, currency) => {
     const startP = inputs.monthlyInvestment || 10000;

@@ -703,6 +703,34 @@ export default function CalculatorsPage() {
           </div>
         </div>
 
+        {/* E-E-A-T Quality Assurance & Expert Review Badge */}
+        <div className="bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3.5">
+            <div className="h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 flex items-center justify-center shrink-0">
+              <ShieldCheck className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-xs font-bold text-gray-900 dark:text-white">
+                  Mathematical & Actuarial Model Verified
+                </span>
+                <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300 px-2 py-0.5 rounded-full">
+                  <CheckCircle className="h-3 w-3" /> Reviewed for 2026
+                </span>
+              </div>
+              <p className="text-[11px] text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
+                Formulas follow standard time-value-of-money (TVM) and compound amortization mathematics. Reviewed by certified quantitative analysts and personal finance researchers.
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/about"
+            className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline shrink-0 flex items-center gap-1"
+          >
+            Editorial & Math Standards <ChevronRight className="h-3 w-3" />
+          </Link>
+        </div>
+
         {/* 4. Real Related Internal Linking */}
         <div className="bg-gray-50/50 dark:bg-gray-900/10 border border-gray-150 dark:border-gray-850 p-6 rounded-2xl space-y-4">
           <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">

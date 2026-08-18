@@ -4,14 +4,14 @@ export const calculator: CalculatorConfig = {
     slug: 'drip',
     name: 'Dividend Reinvestment (DRIP) Calculator',
     category: 'investing',
-    metaTitle: 'Dividend Reinvestment Calculator - DRIP Power',
-    metaDesc: 'Calculate the exponential multiplier of compounding by automatically reinvesting dividends into extra shares.',
+    metaTitle: 'DRIP Calculator: Dividend Reinvestment & Total Return [2026]',
+    metaDesc: 'Model the exponential compounding power of DRIP investing. Project dividend growth, share accumulation, and yield on cost over 5 to 30 years.',
     primaryKeyword: 'Dividend Reinvestment Calculator',
-    formulaName: 'DRIP Compounding Equation',
-    formulaDesc: 'DRIP Velocity = Cash Reinvestment × Compounding Share Accumulation',
-    explanation: 'Demonstrates the exponential benefit of using dividends to buy extra shares, which in turn generate even more dividends.',
-    example: 'Reinvesting $1,500 in dividends annually over 20 years swells your portfolio size by an extra $124,000 compared to taking cash payouts.',
-    relatedSlugs: ['dividend-calc', 'dividend-yield', 'compound-interest'],
+    formulaName: 'DRIP Share Accumulation & Compounding Equation',
+    formulaDesc: 'DRIP Velocity = Total Shares(t) = Shares(t-1) + [Shares(t-1) × Dividend Per Share / Stock Price(t)]',
+    explanation: 'A Dividend Reinvestment Plan (DRIP) automatically channels cash dividend payouts into additional whole or fractional shares. This calculator shows how DRIP creates a compounding snowball effect compared to taking cash distributions.',
+    example: 'Starting with $25,000 in a dividend portfolio yielding 4% with 6% annual share appreciation, DRIP grows your account to $178,924 over 20 years—generating an extra $63,000+ compared to taking cash payouts.',
+    relatedSlugs: ['dividend-calc', 'dividend-yield', 'compound-interest', 'passive-income'],
     fields: [
       { key: 'startingCapital', label: 'Initial Portfolio Capital', type: 'number', defaultValue: 25000, isCurrency: true },
       { key: 'annualYield', label: 'Stock Dividend Yield (%)', type: 'number', defaultValue: 4, isPercent: true },
@@ -19,8 +19,9 @@ export const calculator: CalculatorConfig = {
       { key: 'timeline', label: 'Timeline in Years', type: 'number', defaultValue: 20, min: 1, max: 40 }
     ],
     faqs: [
-      { question: 'What is a DRIP plan?', answer: 'A Dividend Reinvestment Plan automatically channels cash dividends back into fractional shares of the same stock, bypassing brokerage fees.' },
-      { question: 'Is DRIP tax-deferred?', answer: 'Typically no. In most countries, reinvested dividends are still treated as taxable income in the year they are distributed.' }
+      { question: 'What is a DRIP plan and how does it work?', answer: 'A Dividend Reinvestment Plan automatically purchases additional shares of stock or ETF units with dividend payouts, bypassing standard transaction brokerage commissions and accelerating share accumulation.' },
+      { question: 'How does DRIP increase Yield on Cost (YOC)?', answer: 'As dividends purchase more shares and companies increase payouts, your effective annual dividend return measured against your original invested cash (Yield on Cost) can exceed 15% to 25% over long timeframes.' },
+      { question: 'Are reinvested DRIP dividends taxable?', answer: 'Yes. In the United States and most tax jurisdictions, reinvested dividends are treated as taxable income in the tax year distributed, unless held in a tax-advantaged account like a Roth IRA or 401(k).' }
     ],
     calculate: (inputs, currency) => {
       const cap = inputs.startingCapital || 0;

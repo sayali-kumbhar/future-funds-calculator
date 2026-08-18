@@ -4,14 +4,14 @@ export const calculator: CalculatorConfig = {
     slug: 'fire',
     name: 'FIRE Calculator (Standard)',
     category: 'fire',
-    metaTitle: 'FIRE Calculator - Plan Your Early Retirement Goals',
-    metaDesc: 'Design your custom FIRE strategy. Calculate target savings sizes and projection graphs for the classic early retirement pathways.',
+    metaTitle: 'FIRE Calculator: Early Retirement Target & SWR Timeline [2026]',
+    metaDesc: 'Calculate your Financial Independence Retire Early (FIRE) number, Coast FIRE, Lean FIRE, and safe withdrawal rate timeline with interactive charts.',
     primaryKeyword: 'FIRE Calculator',
-    formulaName: 'The FIRE Accumulation Ratio',
-    formulaDesc: 'Accumulation Speed = Savings Rate × Investment Compound Curve.',
+    formulaName: 'The FIRE Accumulation Ratio & 25x Rule',
+    formulaDesc: 'FIRE Number = Annual Expenses × (1 / Safe Withdrawal Rate) = Annual Expenses × 25 (at 4% SWR)',
     explanation: 'The classic Financial Independence, Retire Early (FIRE) planner that maps out standard wealth accumulation curves under a regular safe withdrawal rate.',
-    example: 'A 30-year-old starting with zero savings, who saves 50% of a $6,000 monthly income at a 9% return rate, hits FIRE by age 47.',
-    relatedSlugs: ['financial-freedom', 'coast-fire', 'lean-fire', 'fat-fire'],
+    example: 'With $40,000 in annual living expenses, a 4% Safe Withdrawal Rate mandates a target nest egg of $1,000,000. Saving 50% of an $80,000 salary at 8% returns hits this target in ~16.5 years.',
+    relatedSlugs: ['financial-freedom', 'coast-fire', 'lean-fire', 'fat-fire', 'barista-fire'],
     fields: [
       { key: 'netIncome', label: 'Net Annual Income', type: 'number', defaultValue: 75000, isCurrency: true },
       { key: 'savingsRate', label: 'Savings Rate (%)', type: 'number', defaultValue: 40, min: 5, max: 90, step: 5, isPercent: true },
@@ -20,8 +20,9 @@ export const calculator: CalculatorConfig = {
       { key: 'swr', label: 'Preferred SWR (%)', type: 'number', defaultValue: 4, min: 2, max: 6, step: 0.25, isPercent: true },
     ],
     faqs: [
-      { question: 'What is a typical FIRE savings rate?', answer: 'Standard retirement savings suggest 10% to 15%. In the FIRE movement, savers actively strive for 40% to 70%+ of net post-tax earnings to compress retirement timelines down to 10-15 years.' },
-      { question: 'Is SWR inflation adjusted?', answer: 'Yes. Safe withdrawal theories assume that in Year 1 you withdraw your chosen SWR (e.g., 4%), and in subsequent years you increase that dollar amount by the actual inflation rate, keeping purchasing power stable.' }
+      { question: 'What is the 4% Rule and is it safe for a 40-year early retirement?', answer: 'The Trinity Study established that a 4% initial withdrawal adjusted annually for inflation survived 30-year retirements. For longer 40-50 year FIRE horizons, many financial planners recommend a more conservative 3.25% - 3.5% SWR.' },
+      { question: 'What is the fastest way to accelerate FIRE timelines?', answer: 'Increasing your savings rate from 20% to 50%+ has a dual effect: it drastically speeds up wealth accumulation while simultaneously reducing the annual expenditure your future portfolio must support.' },
+      { question: 'What is the difference between Lean FIRE, Coast FIRE, and Fat FIRE?', answer: 'Lean FIRE targets minimal living expenses (<$40k/yr), Coast FIRE means saving enough early so compound growth hits your goal without extra contributions, and Fat FIRE supports an abundant luxury lifestyle ($100k-$200k+/yr).' }
     ],
     calculate: (inputs, currency) => {
       const inc = inputs.netIncome || 75000;
