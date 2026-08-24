@@ -12,6 +12,7 @@ import { post as moneyAnxietyExpensiveWorld } from './posts/money-anxiety-expens
 import { post as moneyFightsRelationshipsCompromise } from './posts/money-fights-relationships-compromise';
 import { additionalPremiumPosts } from './posts/additionalPremiumPosts';
 import { newCalculatorsBlogs } from './posts/newCalculatorsBlogs';
+import { indianFinanceGuidePosts } from './posts/indianFinanceGuidePosts';
 
 export const PRECOMPUTED_CONTENT_MAP: Record<string, {
   sections: { heading: string; content: string }[];
@@ -38,5 +39,6 @@ export const PRECOMPUTED_CONTENT_MAP: Record<string, {
   'money-anxiety-expensive-world': moneyAnxietyExpensiveWorld,
   'money-fights-relationships-compromise': moneyFightsRelationshipsCompromise,
   ...additionalPremiumPosts,
-  ...newCalculatorsBlogs
+  ...newCalculatorsBlogs,
+  ...indianFinanceGuidePosts
 };
