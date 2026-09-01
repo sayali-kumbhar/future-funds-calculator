@@ -257,18 +257,19 @@ export default function BlogPage({}: BlogPageProps) {
 
     // Store original title
     const originalTitle = document.title;
-    document.title = `${activePost.title} | FutureFund Financial Insights`;
+    const resolvedTitle = activePost.metaTitle || `${activePost.title} | FutureFund Financial Insights`;
+    document.title = resolvedTitle;
 
     // Manage meta tags dynamically
     const metaTags = [
       { name: 'description', content: activePost.metaDescription || activePost.summary },
       { name: 'keywords', content: [activePost.primaryKeyword, ...(activePost.secondaryKeywords || []), ...(activePost.tags || [])].filter(Boolean).join(', ') },
-      { property: 'og:title', content: activePost.title },
+      { property: 'og:title', content: activePost.metaTitle || activePost.title },
       { property: 'og:description', content: activePost.metaDescription || activePost.summary },
       { property: 'og:image', content: activePost.image },
       { property: 'og:url', content: postUrl },
       { property: 'og:type', content: 'article' },
-      { name: 'twitter:title', content: activePost.title },
+      { name: 'twitter:title', content: activePost.metaTitle || activePost.title },
       { name: 'twitter:description', content: activePost.metaDescription || activePost.summary },
       { name: 'twitter:image', content: activePost.image },
       { name: 'twitter:card', content: 'summary_large_image' }

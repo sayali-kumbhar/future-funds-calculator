@@ -140,6 +140,8 @@ export const blogData: BlogPost[] = allBlogsMetadata.map((meta) => {
     const tags = precomputed.tags || generateProgrammaticTags(meta);
     return {
       ...meta,
+      title: precomputed.title || meta.title,
+      metaTitle: precomputed.metaTitle || meta.metaTitle,
       sections,
       faqs: precomputed.faqs || (meta.faqs && meta.faqs.length > 0 ? meta.faqs : [
         {

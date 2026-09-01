@@ -52,13 +52,13 @@ export function resolveMetadata(
     case 'blog-post':
       if (blogSlug) {
         const post = blogData.find(b => b.slug === blogSlug);
-        const resolvedTitle = blogTitle || post?.title || 'Financial Insights';
-        const resolvedDesc = post?.summary || `Read our expert guide on "${resolvedTitle}". Learn how to use a finance calculator to model wealth growth and reach financial independence early.`;
-        title = `${resolvedTitle} | FutureFund`;
+        const resolvedTitle = post?.metaTitle || blogTitle || post?.title || 'Financial Insights';
+        const resolvedDesc = post?.metaDescription || post?.summary || `Read our expert guide on "${resolvedTitle}". Learn how to use a finance calculator to model wealth growth and reach financial independence early.`;
+        title = post?.metaTitle ? `${post.metaTitle} | FutureFund` : `${resolvedTitle} | FutureFund`;
         description = resolvedDesc;
         url = `${origin}/blog/${blogSlug}`;
         type = 'article';
-        keywords = `${post?.category || 'finance'}, ${resolvedTitle}, personal finance guide, finance calculator tutorial, money tips, wealth building, FutureFund`;
+        keywords = [post?.primaryKeyword, ...(post?.secondaryKeywords || []), post?.category || 'finance', resolvedTitle, 'personal finance guide', 'finance calculator tutorial', 'money tips', 'wealth building', 'FutureFund'].filter(Boolean).join(', ');
       }
       break;
     case 'calculators' as Page:
@@ -70,10 +70,10 @@ export function resolveMetadata(
         url = `${origin}/calculators/${calculatorSlug}`;
         keywords = `${calc?.primaryKeyword || resolvedName}, ${resolvedName} calculator, how to use ${resolvedName} calculator, ${resolvedName} online, ${calc?.category || 'financial'} calculator, loan EMI calculator, compound interest calculator, FutureFund`;
       } else {
-        title = '30+ Free Finance Calculators — Car, Home Loan EMI, Personal Loan & SIP | FutureFund';
-        description = 'Access 30+ free web tools: vehicle finance calculator, home loan EMI calculator, personal loan EMI calculator, Finance Calculator India (SIP, EPF, PPF), and compound growth estimators.';
+        title = '30+ Free Finance Calculators: SIP, Loan EMI, FIRE & Taxes | FutureFund';
+        description = 'Access 70+ free financial calculators for SIP, FIRE, loan EMIs, and tax planning. Instant interactive charts with zero signup and 100% private calculations.';
         url = `${origin}/calculators`;
-        keywords = "30 free finance calculators, vehicle finance calculator, car loan EMI calculator, personal loan EMI calculator, home loan mortgage calculator, SIP calculator, step up SIP calculator, compound interest calculator, FIRE calculator, CAGR calculator";
+        keywords = "30 free finance calculators, 70 free financial calculators, SIP calculator, loan EMI calculator, personal loan EMI calculator, home loan mortgage calculator, FIRE calculator, CAGR calculator, tax calculator, vehicle finance calculator";
       }
       break;
     case 'faq':

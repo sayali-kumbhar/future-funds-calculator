@@ -95,6 +95,7 @@ export function autoLinkKeywords(content: string, rules: KeywordRule[] = KEYWORD
  */
 export function formatBlogPostText(text: string): string {
   if (!text) return '';
-  const htmlWithBold = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  const htmlWithLinks = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-emerald-600 dark:text-emerald-400 font-semibold underline decoration-emerald-500/30 hover:decoration-emerald-500 transition-colors">$1</a>');
+  const htmlWithBold = htmlWithLinks.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   return autoLinkKeywords(htmlWithBold);
 }

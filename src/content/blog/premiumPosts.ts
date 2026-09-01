@@ -16,6 +16,8 @@ import { indianFinanceGuidePosts } from './posts/indianFinanceGuidePosts';
 
 export const PRECOMPUTED_CONTENT_MAP: Record<string, {
   sections: { heading: string; content: string }[];
+  title?: string;
+  metaTitle?: string;
   readTime?: string;
   date?: string;
   summary?: string;
