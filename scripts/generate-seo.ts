@@ -71,7 +71,6 @@ function generateRobots() {
 
 User-agent: *
 Allow: /
-Allow: /index.html
 Allow: /about
 Allow: /blog
 Allow: /faq

@@ -23,10 +23,10 @@ export function resolveMetadata(
   calculatorSlug?: string,
   originUrl?: string
 ): ResolvedMeta {
-  const origin = originUrl || DEFAULT_SEO.BASE_URL;
+  const origin = (originUrl || DEFAULT_SEO.BASE_URL).replace(/\/+$/, '');
   let title: string = DEFAULT_SEO.DEFAULT_TITLE;
   let description: string = DEFAULT_SEO.DEFAULT_DESC;
-  let url: string = origin;
+  let url: string = `${origin}/`;
   let type: 'website' | 'article' = 'website';
   let keywords: string = DEFAULT_SEO.DEFAULT_KEYWORDS;
 
@@ -34,7 +34,7 @@ export function resolveMetadata(
     case 'home':
       title = "FutureFund: Free Financial & Retirement Calculators [2026]";
       description = "Plan your wealth with 30+ free finance calculators. Project SIP compounding, calculate loan EMIs, plan FIRE retirement, and model passive income.";
-      url = origin;
+      url = `${origin}/`;
       keywords = "free financial calculator online, finance calculator, how to use finance calculator, vehicle finance calculator, car loan EMI calculator, auto loan payment calculator, personal loan EMI calculator, home loan EMI calculator, mortgage calculator, SIP calculator, step up SIP calculator, compound interest calculator, FIRE retirement calculator, 50/30/20 budget planner, net worth calculator, FutureFund";
       break;
     case 'about':

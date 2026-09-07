@@ -29,6 +29,7 @@ import { blogData as initialBlogData } from '../data/blogData';
 import { CALCULATORS_LIST } from '../data/calculatorsData';
 import { BlogPost, Page } from '../types';
 import { formatBlogPostText } from '../utils/autolink';
+import { DEFAULT_SEO } from '../constants/seo';
 
 interface BlogPageProps {
   selectedPostSlug?: string | null;
@@ -164,7 +165,7 @@ export default function BlogPage({}: BlogPageProps) {
     const existingSchema = document.getElementById('futurefund-seo-schema');
     if (existingSchema) existingSchema.remove();
 
-    const origin = window.location.origin;
+    const origin = DEFAULT_SEO.BASE_URL.replace(/\/+$/, '');
     const postUrl = `${origin}/blog/${activePost.slug}`;
 
     const breadcrumbSchema = {

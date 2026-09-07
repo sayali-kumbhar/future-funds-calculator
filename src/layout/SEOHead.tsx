@@ -19,9 +19,18 @@ export default function SEOHead({
   calculatorSlug
 }: SEOHeadProps) {
   useEffect(() => {
-    const origin = typeof window !== 'undefined' ? window.location.origin : DEFAULT_SEO.BASE_URL;
-    const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
-    const canonicalUrl = `${origin}${pathname}`;
+    // Enforce production canonical domain
+    const productionOrigin = DEFAULT_SEO.BASE_URL.replace(/\/+$/, '');
+
+    // Normalize pathname: strip trailing slashes (except root), strip query strings/hashes
+    const rawPathname = typeof window !== 'undefined' ? window.location.pathname : '';
+    const cleanPath = rawPathname.replace(/\/+$/, '');
+    const normalizedPath = cleanPath === '' ? '/' : cleanPath;
+
+    // Canonical URL: root is `${productionOrigin}/`, sub-routes are `${productionOrigin}${normalizedPath}`
+    const canonicalUrl = normalizedPath === '/'
+      ? `${productionOrigin}/`
+      : `${productionOrigin}${normalizedPath}`;
 
     const { title, description, url, type, keywords } = resolveMetadata(
       page,
@@ -29,7 +38,7 @@ export default function SEOHead({
       blogSlug,
       calculatorName,
       calculatorSlug,
-      origin
+      productionOrigin
     );
 
     // Update document title
@@ -70,12 +79,19 @@ export default function SEOHead({
     updateMetaTag('twitter:description', description);
     updateMetaTag('twitter:image', DEFAULT_SEO.DEFAULT_IMAGE);
 
-    // Canonical link tag
-    let canonicalLink = document.querySelector('link[rel="canonical"]');
-    if (!canonicalLink) {
+    // Canonical link tag - ensure strictly one canonical link tag exists
+    const allCanonicalLinks = document.querySelectorAll('link[rel="canonical"]');
+    let canonicalLink: HTMLLinkElement;
+    if (allCanonicalLinks.length === 0) {
       canonicalLink = document.createElement('link');
       canonicalLink.setAttribute('rel', 'canonical');
       document.head.appendChild(canonicalLink);
+    } else {
+      canonicalLink = allCanonicalLinks[0] as HTMLLinkElement;
+      // Remove any duplicate canonical tags if present
+      for (let i = 1; i < allCanonicalLinks.length; i++) {
+        allCanonicalLinks[i].remove();
+      }
     }
     canonicalLink.setAttribute('href', canonicalUrl);
 
@@ -90,7 +106,7 @@ export default function SEOHead({
 
     const schemaObj = generateJsonLdSchema(
       page,
-      origin,
+      productionOrigin,
       canonicalUrl,
       blogTitle,
       blogSlug,

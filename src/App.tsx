@@ -57,7 +57,7 @@ import { blogData } from './data/blogData';
 import { CALCULATORS_LIST } from './data/calculatorsData';
 
 function getSEOPageFromPathname(pathname: string): Page {
-  const cleanPath = pathname.replace(/^\//, '');
+  const cleanPath = pathname.replace(/^\/+/, '').replace(/\/+$/, '');
   if (!cleanPath) return 'home';
   if (cleanPath.startsWith('blog/')) return 'blog-post';
   if (cleanPath.startsWith('calculators/')) return 'calculators';
@@ -106,19 +106,24 @@ function AppContent() {
   let calculatorSlug: string | undefined;
 
   if (page === 'blog-post') {
-    const slug = location.pathname.split('/').pop();
-    const post = blogData.find(b => b.slug === slug);
-    if (post) {
-      blogTitle = post.title;
-      blogSlug = post.slug;
+    const parts = location.pathname.split('/').filter(Boolean);
+    const slug = parts.length > 1 ? parts[1] : undefined;
+    if (slug) {
+      const post = blogData.find(b => b.slug === slug);
+      if (post) {
+        blogTitle = post.title;
+        blogSlug = post.slug;
+      }
     }
   } else if (page === ('calculators' as Page)) {
-    const slug = location.pathname.split('/').pop();
-    const activeSlug = slug && slug !== 'calculators' ? slug : 'financial-freedom';
-    const calc = CALCULATORS_LIST.find(c => c.slug === activeSlug);
-    if (calc) {
-      calculatorName = calc.name;
-      calculatorSlug = calc.slug;
+    const parts = location.pathname.split('/').filter(Boolean);
+    const slug = parts.length > 1 ? parts[1] : undefined;
+    if (slug) {
+      const calc = CALCULATORS_LIST.find(c => c.slug === slug);
+      if (calc) {
+        calculatorName = calc.name;
+        calculatorSlug = calc.slug;
+      }
     }
   }
 
