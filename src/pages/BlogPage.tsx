@@ -212,7 +212,7 @@ export default function BlogPage({}: BlogPageProps) {
         "name": "FutureFund",
         "logo": {
           "@type": "ImageObject",
-          "url": `${origin}/favicon.ico`
+          "url": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=192"
         }
       },
       "datePublished": activePost.date ? new Date(activePost.date).toISOString() : "2026-07-07T00:00:00.000Z",
@@ -237,7 +237,7 @@ export default function BlogPage({}: BlogPageProps) {
       "@type": "Organization",
       "name": "FutureFund",
       "url": origin,
-      "logo": `${origin}/favicon.ico`,
+      "logo": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=192",
       "sameAs": [
         "https://twitter.com/futurefund",
         "https://linkedin.com/company/futurefund"

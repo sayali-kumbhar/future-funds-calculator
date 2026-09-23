@@ -1,6 +1,6 @@
 {
-  "name": "FutureFund — Financial Calculators & Money Planning Tools",
-  "description": "Free financial calculators, compound growth tools, retirement simulators, and expert personal finance guides.",
+  "name": "FutureFund — Free Finance Calculator Online & App",
+  "description": "Use our free finance calculator online to plan investments, calculate loan EMIs, and forecast retirement. A private, zero-login finance calculator app.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

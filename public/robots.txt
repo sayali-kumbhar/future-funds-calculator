@@ -9,7 +9,19 @@ Allow: /faq
 Allow: /contact
 Allow: /calculators
 Allow: /ai-blueprint
+Allow: /learn
+Allow: /quizzes
+Allow: /budget-planner
+Allow: /goal-tracker
+Allow: /net-worth-tracker
+Allow: /roadmap
 
+# Disallow non-HTML asset files from being crawled as content pages
+Disallow: /favicon.ico
+Disallow: /favicon.svg
+Disallow: /manifest.json
+
+# Disallow internal build artifacts
 Disallow: /assets/.aistudio/
 Disallow: /node_modules/
 Disallow: /dist/

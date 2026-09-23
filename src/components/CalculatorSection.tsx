@@ -273,10 +273,10 @@ export default function CalculatorSection() {
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white flex items-center gap-2">
               <Sparkles className="h-6 w-6 text-emerald-600" />
-              Interactive Freedom Planner
+              Interactive Online Finance Calculator
             </h2>
             <p className="text-gray-500 dark:text-gray-400 mt-1">
-              Compute compounding variables, plot curves, and adjust lifestyle targets.
+              Compute compounding variables, plot wealth curves, and adjust lifestyle targets online.
             </p>
           </div>
 

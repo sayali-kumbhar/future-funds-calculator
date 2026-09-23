@@ -11,6 +11,12 @@ export const calculator: CalculatorConfig = {
     formulaDesc: 'Sustainable Annual Outflow = Portfolio Balance × SWR (%).',
     explanation: 'A highly specific tool for modeling your safe retirement withdrawal rate against various retirement lengths (e.g., 30 to 50 years) to protect against portfolio depletion.',
     example: 'If your retirement timeline is 45 years, selecting a lower 3.25% SWR offers a near-100% success rate under historical market scenarios.',
+    crossLinkCallout: {
+      prompt: 'Planning an early retirement spanning 35 to 55+ years?',
+      targetSlug: 'fire',
+      targetName: 'Compare Lean, Standard, Fat, and Coast FIRE roadmaps with custom safe withdrawal guardrails.',
+      anchorText: 'Interactive FIRE Movement Calculator'
+    },
     relatedSlugs: ['fire', 'lean-fire', 'fat-fire', 'withdrawal-rate'],
     fields: [
       { key: 'portfolioSize', label: 'Accumulated Portfolio Worth', type: 'number', defaultValue: 1000000, isCurrency: true },

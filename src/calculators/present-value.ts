@@ -11,7 +11,7 @@ export const calculator: CalculatorConfig = {
     formulaDesc: 'PV = FV / (1 + r)^t.',
     explanation: 'Determines what a future lump sum of money is worth today, given a specific rate of return (known as the discount rate or hurdle rate).',
     example: 'To secure a payout of $100,000 in 15 years assuming an 8% hurdle rate, you must invest $31,524 today.',
-    relatedSlugs: ['future-value', 'inflation', 'withdrawing-rate', 'compound-interest'],
+    relatedSlugs: ['future-value', 'inflation', 'safe-withdrawal', 'compound-interest'],
     fields: [
       { key: 'futureValue', label: 'Desired Future Sum (FV)', type: 'number', defaultValue: 100000, isCurrency: true },
       { key: 'years', label: 'Timeline in Years (t)', type: 'number', defaultValue: 15, min: 1, max: 50 },

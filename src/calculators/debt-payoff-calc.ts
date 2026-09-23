@@ -11,7 +11,7 @@ export const calculator: CalculatorConfig = {
     formulaDesc: 'Interest Drag = Balance × (Rate / 12)',
     explanation: 'Calculates the compound cost of high-interest debt and structures accelerated payoff models.',
     example: 'Paying $200 extra monthly on a $15,000 loan trims your payoff timeline from 5 years down to 3.2 years.',
-    relatedSlugs: ['mortgage-calc', 'credit-card-payoff', 'debt-snowball'],
+    relatedSlugs: ['mortgage', 'credit-card-snowball', 'debt-payoff'],
     fields: [
       { key: 'outstandingBalance', label: 'Outstanding Balance', type: 'number', defaultValue: 15000, isCurrency: true },
       { key: 'annualRate', label: 'Annual Interest Rate (%)', type: 'number', defaultValue: 14, isPercent: true },

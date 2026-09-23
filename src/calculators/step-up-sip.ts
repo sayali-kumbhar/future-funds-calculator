@@ -11,7 +11,13 @@ export const calculator: CalculatorConfig = {
   formulaDesc: 'Yearly SIP = Previous Year SIP * (1 + Step-Up %)',
   explanation: 'Projects how increasing your monthly mutual fund investment amount by a small fixed percentage each year (to align with salary increments) dramatically accelerates your path to financial freedom.',
   example: 'Starting a ₹10,000 monthly SIP with a 10% annual step-up for 15 years at a 12% return yields ₹67.7 Lakhs, compared to just ₹50.5 Lakhs from a static, non-increasing SIP.',
-  relatedSlugs: ['compound-interest', 'investment', 'lump-sum', 'sip-vs-lump-sum'],
+  crossLinkCallout: {
+    prompt: 'Wondering when your stepped-up investing pace unlocks early retirement?',
+    targetSlug: 'fire',
+    targetName: 'Map your compounding portfolio directly into Lean, Standard, and Fat FIRE milestones.',
+    anchorText: 'Calculate Your FIRE Early Retirement Age'
+  },
+  relatedSlugs: ['fire', 'compound-interest', 'investment', 'lump-sum', 'sip-vs-lump-sum'],
   fields: [
     { key: 'monthlyInvestment', label: 'Initial Monthly Investment', type: 'number', defaultValue: 10000, isCurrency: true },
     { key: 'annualTopUp', label: 'Annual Step-Up / Top-Up (%)', type: 'number', defaultValue: 10, isPercent: true, min: 1, max: 50, step: 1 },

@@ -11,7 +11,7 @@ export const calculator: CalculatorConfig = {
     formulaDesc: 'FV = P × (1+r)^t + PMT × [((1+r)^t - 1)/r]',
     explanation: 'Models saving cash reserves in liquid accounts, demonstrating steady baseline compounding growth.',
     example: 'Depositing $250 monthly in a 4.5% high-yield bank account accumulates $39,200 in 10 years.',
-    relatedSlugs: ['savings-goal', 'emergency-fund', 'rainy-day-fund'],
+    relatedSlugs: ['savings-goal', 'emergency-fund', 'emergency-runway'],
     fields: [
       { key: 'startingBase', label: 'Starting Cash Savings', type: 'number', defaultValue: 5000, isCurrency: true },
       { key: 'monthlyAdd', label: 'Monthly Savings Deposit', type: 'number', defaultValue: 250, isCurrency: true },

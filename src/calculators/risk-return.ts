@@ -11,7 +11,7 @@ export const calculator: CalculatorConfig = {
     formulaDesc: 'Sharpe Ratio = (Expected Return - Risk Free Rate) / Volatility',
     explanation: 'Examines risk-adjusted performance metrics to identify if an investment is worth its volatility.',
     example: 'A stock with a 12% return and 15% volatility outscores a crypto coin with a 20% return but 45% volatility on risk-adjusted health.',
-    relatedSlugs: ['portfolio-growth', 'asset-allocation', 'cagr-calc'],
+    relatedSlugs: ['portfolio-growth', 'portfolio-allocation', 'cagr-calc'],
     fields: [
       { key: 'expectedReturn', label: 'Expected Return (%)', type: 'number', defaultValue: 11, isPercent: true },
       { key: 'riskFreeRate', label: 'Risk-Free Yield Rate (%)', type: 'number', defaultValue: 4, isPercent: true },

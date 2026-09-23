@@ -9,6 +9,14 @@
   ],
   "rewrites": [
     {
+      "source": "/favicon.ico",
+      "destination": "/favicon.ico"
+    },
+    {
+      "source": "/favicon.svg",
+      "destination": "/favicon.svg"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/sitemap.xml"
     },
@@ -19,6 +27,10 @@
     {
       "source": "/manifest.json",
       "destination": "/manifest.json"
+    },
+    {
+      "source": "/ads.txt",
+      "destination": "/ads.txt"
     },
     {
       "source": "/sw.js",

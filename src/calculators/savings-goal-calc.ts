@@ -11,7 +11,7 @@ export const calculator: CalculatorConfig = {
     formulaDesc: 'Monthly Deposit = Goal Target / Months',
     explanation: 'Reverse-calculates your monthly cash contribution needed to secure an upcoming purchase goal.',
     example: 'To buy a $12,000 asset in 18 months, you need to save $667 monthly.',
-    relatedSlugs: ['savings-calc', 'vacation-savings', 'wedding-savings'],
+    relatedSlugs: ['savings-calc', 'vacation-savings', 'wedding-opportunity'],
     fields: [
       { key: 'goalAmount', label: 'Goal Purchase Target', type: 'number', defaultValue: 12000, isCurrency: true },
       { key: 'monthsToGoal', label: 'Timeline in Months', type: 'number', defaultValue: 18, min: 1, max: 60 }

@@ -11,7 +11,7 @@ export const calculator: CalculatorConfig = {
     formulaDesc: 'A = P × (1+r)^t + PMT × [((1+r)^t - 1)/r]',
     explanation: 'Enables users to input a large existing portfolio base and overlay consistent systematic monthly allocations to determine long-term expansion timelines.',
     example: 'An existing $100,000 portfolio added with $1,000 monthly contributions grows to $751,200 in 15 years at a 9% return.',
-    relatedSlugs: ['compound-interest', 'investment-goal', 'asset-allocation'],
+    relatedSlugs: ['compound-interest', 'investment-goal', 'portfolio-allocation'],
     fields: [
       { key: 'currentValue', label: 'Starting Portfolio Value', type: 'number', defaultValue: 100000, isCurrency: true },
       { key: 'monthlySave', label: 'Systematic Monthly Addition', type: 'number', defaultValue: 1000, isCurrency: true },

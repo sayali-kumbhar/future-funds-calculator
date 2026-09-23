@@ -32,7 +32,7 @@ export default function SEOHead({
       ? `${productionOrigin}/`
       : `${productionOrigin}${normalizedPath}`;
 
-    const { title, description, url, type, keywords } = resolveMetadata(
+    const { title, description, url, type, keywords, ogTitle, ogDescription } = resolveMetadata(
       page,
       blogTitle,
       blogSlug,
@@ -67,16 +67,16 @@ export default function SEOHead({
     }
 
     // Open Graph Tags
-    updateMetaTag('og:title', title, true);
-    updateMetaTag('og:description', description, true);
+    updateMetaTag('og:title', ogTitle || title, true);
+    updateMetaTag('og:description', ogDescription || description, true);
     updateMetaTag('og:url', canonicalUrl, true);
     updateMetaTag('og:type', type, true);
     updateMetaTag('og:image', DEFAULT_SEO.DEFAULT_IMAGE, true);
 
     // Twitter Tags
     updateMetaTag('twitter:card', 'summary_large_image');
-    updateMetaTag('twitter:title', title);
-    updateMetaTag('twitter:description', description);
+    updateMetaTag('twitter:title', ogTitle || title);
+    updateMetaTag('twitter:description', ogDescription || description);
     updateMetaTag('twitter:image', DEFAULT_SEO.DEFAULT_IMAGE);
 
     // Canonical link tag - ensure strictly one canonical link tag exists

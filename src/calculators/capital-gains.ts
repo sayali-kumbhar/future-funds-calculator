@@ -11,7 +11,7 @@ export const calculator: CalculatorConfig = {
     formulaDesc: 'Capital Gain = Sale Price - Buy Cost - Allowed Allowances',
     explanation: 'Provides general estimates of Short-Term (STCG) or Long-Term (LTCG) investment profit tax rates based on holding timelines.',
     example: 'Selling stock for a $15,000 profit after holding it for 3 years incurs a 15% LTCG tax of $2,250 in standard tax regimes.',
-    relatedSlugs: ['roi', 'annualized-return', 'tax-estimator'],
+    relatedSlugs: ['roi', 'annualized-return', 'tax-bracket-calc'],
     fields: [
       { key: 'buyPrice', label: 'Acquisition / Buy Price', type: 'number', defaultValue: 10000, isCurrency: true },
       { key: 'sellPrice', label: 'Selling / Liquidation Price', type: 'number', defaultValue: 25000, isCurrency: true },

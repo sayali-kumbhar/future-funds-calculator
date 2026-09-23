@@ -11,7 +11,7 @@ export const calculator: CalculatorConfig = {
     formulaDesc: 'ROI = [(Final Value - Initial Cost) / Initial Cost] × 100',
     explanation: 'Calculates the simple percentage profitability rating of an asset purchase or business expenditure.',
     example: 'Purchasing a private asset for $20,000 and selling it for $27,000 represents a 35% ROI profit margin.',
-    relatedSlugs: ['annualized-return', 'cagr', 'investment-fee'],
+    relatedSlugs: ['annualized-return', 'cagr-calc', 'investment-fee'],
     fields: [
       { key: 'initialCost', label: 'Initial Purchase Cost', type: 'number', defaultValue: 20000, isCurrency: true },
       { key: 'finalValue', label: 'Final Sold Value', type: 'number', defaultValue: 27000, isCurrency: true }

@@ -25,6 +25,11 @@ Allow: /goal-tracker
 Allow: /net-worth-tracker
 Allow: /roadmap
 
+# Disallow non-HTML asset files from being crawled as content pages
+Disallow: /favicon.ico
+Disallow: /favicon.svg
+Disallow: /manifest.json
+
 # Protect temporary cache directories or mock artifacts
 Disallow: /assets/.aistudio/
 Disallow: /node_modules/

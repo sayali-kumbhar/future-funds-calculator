@@ -79,18 +79,18 @@ export default function CalculatorsPage() {
   useEffect(() => {
     const schema = {
       "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": calculator.name,
+      "@type": "SoftwareApplication",
+      "name": calculator.h1Title || calculator.name,
       "description": calculator.metaDesc,
       "url": window.location.href,
-      "applicationCategory": "FinancialApplication",
+      "applicationCategory": "FinanceApplication",
       "operatingSystem": "All",
       "browserRequirements": "Requires JavaScript",
       "featureList": [
         "Interactive calculations",
         "Visual chart projections",
-        "PDF report exports",
-        "Result summary copying"
+        "Safe withdrawal rate adjustments",
+        "Years-to-financial-independence timeline"
       ],
       "offers": {
         "@type": "Offer",
@@ -269,16 +269,30 @@ export default function CalculatorsPage() {
           <ChevronRight className="h-3 w-3" />
           <span className="cursor-pointer hover:text-emerald-500" onClick={() => setActiveTab('all')}>Calculators</span>
           <ChevronRight className="h-3 w-3" />
-          <span className="text-gray-500 dark:text-gray-300 font-semibold">{calculator.name}</span>
+          <span className="text-gray-500 dark:text-gray-300 font-semibold">{calculator.h1Title || calculator.name}</span>
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-3">
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
-            Interactive <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-300">{calculator.name}</span>
+            {calculator.h1Title ? (
+              calculator.h1Title
+            ) : (
+              <>
+                Interactive <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-300">{calculator.name}</span>
+              </>
+            )}
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 max-w-3xl leading-relaxed">
-            {calculator.metaDesc}
-          </p>
+          {calculator.introCopy && calculator.introCopy.length > 0 ? (
+            <div className="space-y-3 max-w-4xl text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed pt-1">
+              {calculator.introCopy.map((para, idx) => (
+                <p key={idx}>{para}</p>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-3xl leading-relaxed">
+              {calculator.metaDesc}
+            </p>
+          )}
         </div>
       </div>
 
@@ -653,58 +667,255 @@ export default function CalculatorsPage() {
         </div>
       </div>
 
-      {/* 3. Deep Educational Section: Formula, Explanation, Example */}
-      <section className="mt-16 border-t border-gray-150 dark:border-gray-900 pt-12 space-y-10 print:hidden">
+      {/* 3. Deep Educational Section: How It Works, Worked Example, FAQ, Related Calculators */}
+      <section className="mt-16 border-t border-gray-150 dark:border-gray-900 pt-12 space-y-12 print:hidden">
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          
-          {/* Formula disclosure card */}
-          <div className="bg-emerald-50/10 dark:bg-emerald-950/10 border border-emerald-500/10 p-6 rounded-2xl space-y-3 shadow-sm">
-            <span className="h-8 w-8 bg-emerald-100 dark:bg-emerald-950 text-emerald-600 rounded-lg flex items-center justify-center">
-              <TrendingUp className="h-4 w-4" />
-            </span>
-            <h3 className="text-sm font-bold text-gray-900 dark:text-white">
-              The Math & Formula
-            </h3>
-            <div className="space-y-1">
-              <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold font-mono">
-                {calculator.formulaName}
+        {/* Section 1: How this calculator works */}
+        <div className="space-y-6 max-w-4xl">
+          <div className="space-y-2">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2.5">
+              <Compass className="h-6 w-6 text-emerald-500" />
+              {calculator.howItWorksTitle || 'How This Calculator Works'}
+            </h2>
+            {calculator.howItWorksIntro ? (
+              <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                {calculator.howItWorksIntro}
               </p>
-              <p className="text-xs text-gray-600 dark:text-gray-300 leading-normal bg-white dark:bg-gray-900/40 p-2.5 rounded-lg border border-gray-100 dark:border-gray-850 font-mono">
-                {calculator.formulaDesc}
+            ) : null}
+          </div>
+
+          {calculator.howItWorksSections && calculator.howItWorksSections.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {calculator.howItWorksSections.map((sec, idx) => (
+                <div key={idx} className="bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-800 p-6 rounded-2xl space-y-3 shadow-xs">
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span className="flex items-center justify-center h-6 w-6 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-bold">
+                      {idx + 1}
+                    </span>
+                    {sec.title}
+                  </h3>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {sec.description}
+                  </p>
+                  {sec.formula && (
+                    <div className="bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-500/20 p-3 rounded-xl">
+                      <p className="text-[11px] font-mono font-bold text-emerald-700 dark:text-emerald-400">
+                        {sec.formula}
+                      </p>
+                    </div>
+                  )}
+                  {sec.formulaExplainer && (
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed italic">
+                      {sec.formulaExplainer}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-emerald-50/10 dark:bg-emerald-950/10 border border-emerald-500/10 p-6 rounded-2xl space-y-3 shadow-sm">
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white">
+                  {calculator.formulaName}
+                </h3>
+                <p className="text-xs text-gray-600 dark:text-gray-300 leading-normal bg-white dark:bg-gray-900/40 p-2.5 rounded-lg border border-gray-100 dark:border-gray-850 font-mono">
+                  {calculator.formulaDesc}
+                </p>
+              </div>
+              <div className="bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-800 p-6 rounded-2xl space-y-3 shadow-sm">
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white">
+                  Mathematical Methodology
+                </h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                  {calculator.explanation}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Section 2: Worked Example with Real Numbers */}
+        <div className="space-y-6 max-w-4xl">
+          <div className="space-y-1">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2.5">
+              <Bookmark className="h-6 w-6 text-emerald-500" />
+              Worked Example: Real-World Case Study
+            </h2>
+            <p className="text-xs text-gray-400">Walkthrough of how the numbers compound step-by-step.</p>
+          </div>
+
+          {calculator.workedExampleData ? (
+            <div className="bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-800 p-6 sm:p-7 rounded-2xl space-y-6 shadow-xs">
+              <div>
+                <h3 className="text-base font-bold text-gray-900 dark:text-white">
+                  {calculator.workedExampleData.scenarioTitle}
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4">
+                  {calculator.workedExampleData.parameters.map((param, idx) => (
+                    <div key={idx} className="p-3 rounded-xl bg-gray-50 dark:bg-gray-850/60 border border-gray-100 dark:border-gray-800">
+                      <p className="text-[11px] text-gray-500 dark:text-gray-400">{param.label}</p>
+                      <p className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white font-mono mt-0.5">{param.value}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-3 border-t border-gray-100 dark:border-gray-800 pt-5">
+                <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Step-by-Step Calculation
+                </h4>
+                <div className="space-y-2.5">
+                  {calculator.workedExampleData.steps.map((step, idx) => (
+                    <div key={idx} className="p-3.5 rounded-xl bg-emerald-50/30 dark:bg-emerald-950/20 border border-emerald-500/15">
+                      <p className="text-xs font-bold text-gray-900 dark:text-white font-mono text-emerald-700 dark:text-emerald-300">
+                        {step.title}
+                      </p>
+                      <p className="text-xs font-mono font-semibold text-gray-800 dark:text-gray-200 mt-1">
+                        {step.calculation}
+                      </p>
+                      {step.note && (
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
+                          {step.note}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {calculator.workedExampleData.milestones && calculator.workedExampleData.milestones.length > 0 && (
+                <div className="space-y-3 border-t border-gray-100 dark:border-gray-800 pt-5">
+                  <h4 className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Portfolio Milestones & Compounding Trajectory
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {calculator.workedExampleData.milestones.map((m, idx) => (
+                      <div key={idx} className="p-3.5 rounded-xl bg-gray-50 dark:bg-gray-850/50 border border-gray-100 dark:border-gray-800">
+                        <p className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">{m.year}</p>
+                        <p className="text-xs text-gray-800 dark:text-gray-200 mt-1 font-medium leading-relaxed">{m.balance}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start gap-3">
+                <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-xs font-bold text-emerald-900 dark:text-emerald-200">Outcome Summary</p>
+                  <p className="text-xs text-emerald-800 dark:text-emerald-300 mt-0.5 leading-relaxed">
+                    {calculator.workedExampleData.outcome}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-800 p-6 rounded-2xl shadow-xs">
+              <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed italic">
+                {calculator.example}
               </p>
             </div>
+          )}
+        </div>
+
+        {/* Section 3: FAQ section with H3 tags for targeted long-tail queries */}
+        <div className="space-y-6 max-w-4xl">
+          <div className="space-y-1">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2.5">
+              <HelpCircle className="h-6 w-6 text-emerald-500" />
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xs text-gray-400">Detailed answers to high-intent questions about financial independence, safe withdrawal rates, and timelines.</p>
+          </div>
+          
+          <div className="space-y-4">
+            {calculator.faqs.map((faq, idx) => (
+              <div key={idx} className="border border-gray-150 dark:border-gray-800 p-5 sm:p-6 rounded-2xl bg-white dark:bg-gray-900 shadow-xs">
+                <h3 className="text-sm sm:text-base font-bold text-gray-900 dark:text-white mb-2">
+                  {faq.question}
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                  {faq.answer}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Section 4: Real Internal Links with Rich Link Equity */}
+        <div className="space-y-6 max-w-4xl">
+          {calculator.crossLinkCallout && (
+            <div className="p-4 sm:p-5 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-500/25 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="space-y-1">
+                <p className="text-xs font-bold text-gray-900 dark:text-white">
+                  {calculator.crossLinkCallout.prompt}
+                </p>
+                <p className="text-xs text-gray-600 dark:text-gray-300">
+                  {calculator.crossLinkCallout.targetName}
+                </p>
+              </div>
+              <Link
+                to={`/calculators/${calculator.crossLinkCallout.targetSlug}`}
+                onClick={() => {
+                  setSelectedCalculatorSlug(calculator.crossLinkCallout!.targetSlug);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors shrink-0 shadow-xs"
+              >
+                <span>{calculator.crossLinkCallout.anchorText}</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          )}
+
+          <div className="space-y-1">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white flex items-center gap-2.5">
+              <TrendingUp className="h-6 w-6 text-emerald-500" />
+              Explore Related Wealth & Compounding Calculators
+            </h2>
+            <p className="text-xs text-gray-400">Discover interconnected tools to refine every stage of your financial independence plan.</p>
           </div>
 
-          {/* Plain english explanation */}
-          <div className="bg-white dark:bg-gray-900 border border-gray-150 p-6 rounded-2xl space-y-3 shadow-sm">
-            <span className="h-8 w-8 bg-blue-100 dark:bg-blue-950 text-blue-600 rounded-lg flex items-center justify-center">
-              <Compass className="h-4 w-4" />
-            </span>
-            <h3 className="text-sm font-bold text-gray-900 dark:text-white">
-              How It Works
-            </h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-              {calculator.explanation}
-            </p>
-          </div>
-
-          {/* Practical concrete example */}
-          <div className="bg-white dark:bg-gray-900 border border-gray-150 p-6 rounded-2xl space-y-3 shadow-sm">
-            <span className="h-8 w-8 bg-amber-100 dark:bg-amber-950 text-amber-600 rounded-lg flex items-center justify-center">
-              <Bookmark className="h-4 w-4" />
-            </span>
-            <h3 className="text-sm font-bold text-gray-900 dark:text-white">
-              Case Study Example
-            </h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed italic">
-              {calculator.example}
-            </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {Array.from(new Set(calculator.relatedSlugs)).map((slug) => {
+              const relatedCalc = CALCULATORS_LIST.find((c) => c.slug === slug);
+              if (!relatedCalc) return null;
+              return (
+                <Link
+                  key={slug}
+                  to={`/calculators/${slug}`}
+                  onClick={() => {
+                    setSelectedCalculatorSlug(slug);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="group flex flex-col justify-between p-5 rounded-2xl bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-850 hover:border-emerald-500 dark:hover:border-emerald-500 transition-all hover:shadow-xs"
+                >
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                        {relatedCalc.category}
+                      </span>
+                      <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-emerald-500 transition-transform group-hover:translate-x-1" />
+                    </div>
+                    <h3 className="text-sm sm:text-base font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                      {relatedCalc.name}
+                    </h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                      {relatedCalc.metaDesc}
+                    </p>
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-850 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                    <span>Open Calculator</span>
+                    <ChevronRight className="h-3 w-3" />
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
 
         {/* E-E-A-T Quality Assurance & Expert Review Badge */}
-        <div className="bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 max-w-4xl">
           <div className="flex items-start gap-3.5">
             <div className="h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 flex items-center justify-center shrink-0">
               <ShieldCheck className="h-5 w-5" />
@@ -731,35 +942,9 @@ export default function CalculatorsPage() {
           </Link>
         </div>
 
-        {/* 4. Real Related Internal Linking */}
-        <div className="bg-gray-50/50 dark:bg-gray-900/10 border border-gray-150 dark:border-gray-850 p-6 rounded-2xl space-y-4">
-          <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-            Related Financial Planning Calculators
-          </h4>
-          <div className="flex flex-wrap gap-2">
-            {Array.from(new Set(calculator.relatedSlugs)).map((slug) => {
-              const relatedCalc = CALCULATORS_LIST.find((c) => c.slug === slug);
-              if (!relatedCalc) return null;
-              return (
-                <button
-                  key={slug}
-                  onClick={() => {
-                    setSelectedCalculatorSlug(slug);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-850 hover:border-emerald-500 text-xs font-semibold text-gray-700 dark:text-gray-300 transition-colors focus:outline-none"
-                >
-                  <span>{relatedCalc.name}</span>
-                  <ArrowRight className="h-3.5 w-3.5 text-emerald-500" />
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 4b. Recommended Editorial Guides & Articles */}
+        {/* Recommended Editorial Guides & Articles */}
         {relatedArticles.length > 0 && (
-          <div className="bg-gray-50/50 dark:bg-gray-900/10 border border-gray-150 dark:border-gray-850 p-6 rounded-2xl space-y-4">
+          <div className="bg-gray-50/50 dark:bg-gray-900/10 border border-gray-150 dark:border-gray-850 p-6 rounded-2xl space-y-4 max-w-4xl">
             <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">
               Recommended Editorial Guides & Articles
             </h4>
@@ -768,7 +953,7 @@ export default function CalculatorsPage() {
                 <Link
                   key={post.slug}
                   to={`/blog/${post.slug}`}
-                  className="group flex flex-col justify-between p-4 rounded-xl bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-850 hover:border-emerald-500 text-xs text-gray-700 dark:text-gray-300 transition-all hover:shadow-sm"
+                  className="group flex flex-col justify-between p-4 rounded-xl bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-850 hover:border-emerald-500 text-xs text-gray-700 dark:text-gray-300 transition-all hover:shadow-xs"
                 >
                   <div className="space-y-1.5">
                     <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
@@ -790,30 +975,6 @@ export default function CalculatorsPage() {
             </div>
           </div>
         )}
-
-        {/* 5. Custom FAQ list for that specific selected calculator */}
-        <div className="space-y-6 max-w-4xl">
-          <div className="space-y-1">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              <HelpCircle className="h-5 w-5 text-emerald-500" />
-              Frequently Asked Questions
-            </h3>
-            <p className="text-xs text-gray-400">Detailed answers about variables, rules, and mathematical models.</p>
-          </div>
-          
-          <div className="space-y-4">
-            {calculator.faqs.map((faq, idx) => (
-              <div key={idx} className="border border-gray-100 dark:border-gray-900 p-5 rounded-2xl bg-gray-50/50 dark:bg-gray-900/20">
-                <h4 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white mb-1.5">
-                  {faq.question}
-                </h4>
-                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                  {faq.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
       </section>
     </div>
   );

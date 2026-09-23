@@ -10,6 +10,8 @@ export interface ResolvedMeta {
   url: string;
   type: 'website' | 'article';
   keywords: string;
+  ogTitle?: string;
+  ogDescription?: string;
 }
 
 /**
@@ -29,13 +31,15 @@ export function resolveMetadata(
   let url: string = `${origin}/`;
   let type: 'website' | 'article' = 'website';
   let keywords: string = DEFAULT_SEO.DEFAULT_KEYWORDS;
+  let ogTitle: string | undefined;
+  let ogDescription: string | undefined;
 
   switch (page) {
     case 'home':
-      title = "FutureFund: Free Financial & Retirement Calculators [2026]";
-      description = "Plan your wealth with 30+ free finance calculators. Project SIP compounding, calculate loan EMIs, plan FIRE retirement, and model passive income.";
+      title = "FutureFund — Free Finance Calculator Online & App";
+      description = "Use our free finance calculator online to plan investments, calculate loan EMIs, and forecast retirement. A private, zero-login finance calculator app.";
       url = `${origin}/`;
-      keywords = "free financial calculator online, finance calculator, how to use finance calculator, vehicle finance calculator, car loan EMI calculator, auto loan payment calculator, personal loan EMI calculator, home loan EMI calculator, mortgage calculator, SIP calculator, step up SIP calculator, compound interest calculator, FIRE retirement calculator, 50/30/20 budget planner, net worth calculator, FutureFund";
+      keywords = "finance calculator, finance calculator online, finance calculator app, finance calculator home loan, finance calculation formula, vehicle finance calculator, car loan EMI calculator, personal loan EMI calculator, mortgage calculator, SIP calculator, step up SIP calculator, compound interest calculator, FIRE retirement calculator, 50/30/20 budget planner, net worth calculator, FutureFund";
       break;
     case 'about':
       title = 'About FutureFund: Transparent Financial Calculators & Wealth Tools';
@@ -69,6 +73,8 @@ export function resolveMetadata(
         description = calc?.metaDesc || `Use the ${resolvedName} finance calculator to compute monthly installments, interest costs, and compound wealth projections with interactive charts.`;
         url = `${origin}/calculators/${calculatorSlug}`;
         keywords = `${calc?.primaryKeyword || resolvedName}, ${resolvedName} calculator, how to use ${resolvedName} calculator, ${resolvedName} online, ${calc?.category || 'financial'} calculator, loan EMI calculator, compound interest calculator, FutureFund`;
+        if (calc?.ogTitle) ogTitle = calc.ogTitle;
+        if (calc?.ogDesc) ogDescription = calc.ogDesc;
       } else {
         title = '30+ Free Finance Calculators: SIP, Loan EMI, FIRE & Taxes | FutureFund';
         description = 'Access 70+ free financial calculators for SIP, FIRE, loan EMIs, and tax planning. Instant interactive charts with zero signup and 100% private calculations.';
@@ -186,7 +192,7 @@ export function resolveMetadata(
       break;
   }
 
-  return { title, description, url, type, keywords };
+  return { title, description, url, type, keywords, ogTitle, ogDescription };
 }
 
 /**
@@ -350,22 +356,28 @@ export function generateJsonLdSchema(
     }
   }
 
-  // 6. Conditionally add SoftwareApplication / WebApplication Schema for calculators
+  // 6. Conditionally add SoftwareApplication Schema for calculators
   if (page === ('calculators' as Page) && calculatorSlug) {
     const calc = CALCULATORS_LIST.find(c => c.slug === calculatorSlug);
-    const resolvedName = calculatorName || calc?.name || 'Financial Calculator';
+    const resolvedName = calc?.h1Title || calc?.name || calculatorName || 'Financial Calculator';
     const appSchema = {
       '@type': 'SoftwareApplication',
       '@id': `${currentUrl}#software`,
-      'name': `${resolvedName} Calculator - FutureFund — Financial Calculators & Money Planning Tools`,
-      'operatingSystem': 'Any',
+      'name': resolvedName,
+      'operatingSystem': 'All',
       'applicationCategory': 'FinanceApplication',
       'offers': {
         '@type': 'Offer',
         'price': '0',
         'priceCurrency': 'USD'
       },
-      'description': calc?.metaDesc || calc?.explanation || `Free interactive ${resolvedName} tool on FutureFund — Financial Calculators & Money Planning Tools.`,
+      'featureList': [
+        'Instant financial independence corpus calculation',
+        'Interactive safe withdrawal rate adjustments',
+        'Time-to-retirement compounding curve visualizations',
+        '100% private in-browser client calculations'
+      ],
+      'description': calc?.metaDesc || calc?.explanation || `Free interactive ${resolvedName} tool on FutureFund.`,
       'publisher': {
         '@id': `${origin}/#organization`
       }

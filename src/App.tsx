@@ -175,7 +175,7 @@ function AppContent() {
 
                       <div className="max-w-3xl mx-auto space-y-4">
                         <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
-                          Design Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-300">Financial Freedom</span>.
+                          The Free <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-300">Finance Calculator</span> for Your Wealth & Retirement.
                         </h1>
                         <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
                           Discover how small financial decisions today can change your future. Simulate what-if investment scenarios, generate compound curves, and export roadmaps.
@@ -225,7 +225,7 @@ function AppContent() {
                     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
                       <div className="text-center max-w-2xl mx-auto space-y-2">
                         <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-                          Why Plan with FutureFund?
+                          Why Choose Our Online Finance Calculator?
                         </h2>
                         <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                           Traditional advisors push commission products. We empower you with pure, mathematical compounding clarity.
@@ -260,7 +260,7 @@ function AppContent() {
                           <div className="h-10 w-10 bg-emerald-100 dark:bg-emerald-950 text-emerald-600 rounded-xl flex items-center justify-center">
                             <ShieldCheck className="h-5 w-5" />
                           </div>
-                          <h3 className="text-sm font-bold text-gray-900 dark:text-white">Absolute Privacy Policy</h3>
+                          <h3 className="text-sm font-bold text-gray-900 dark:text-white">A 100% Private Finance Calculator App</h3>
                           <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
                             Every mathematical variable remains enclosed in local memory browser caches. Zero advisory account signups, zero financial sales, zero tracking cookies.
                           </p>

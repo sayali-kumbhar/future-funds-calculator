@@ -11,7 +11,7 @@ export const calculator: CalculatorConfig = {
     formulaDesc: 'AR = [(Final Value / Initial Value)^(1 / Years) - 1] × 100',
     explanation: 'Converts absolute multi-year investment profits into a normalized annual interest return, facilitating precise product comparisons.',
     example: 'A portfolio expanding from $10,000 to $18,000 over 5.5 years represents an annualized return rate of 11.23%.',
-    relatedSlugs: ['roi', 'cagr', 'index-fund'],
+    relatedSlugs: ['roi', 'cagr-calc', 'index-fund'],
     fields: [
       { key: 'initialValue', label: 'Initial Principal Base', type: 'number', defaultValue: 10000, isCurrency: true },
       { key: 'finalValue', label: 'Final Asset Balance', type: 'number', defaultValue: 18000, isCurrency: true },

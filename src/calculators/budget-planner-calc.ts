@@ -11,7 +11,7 @@ export const calculator: CalculatorConfig = {
     formulaDesc: 'Savings Margin = Income - Needs - Wants',
     explanation: 'Enables users to categorize monthly expenses and optimize savings margins for investment compounding.',
     example: 'An income of $5,000 allocated with $2,500 needs, $1,500 wants, and $1,000 savings optimizes your compound velocity.',
-    relatedSlugs: ['savings-calc', 'expense-tracker-calc', 'rent-vs-buy-calc'],
+    relatedSlugs: ['savings-calc', 'expense-ratio-calc', 'rent-vs-buy'],
     fields: [
       { key: 'monthlyIncome', label: 'Net Monthly Income', type: 'number', defaultValue: 5000, isCurrency: true },
       { key: 'needsExpenses', label: 'Monthly Essential Needs', type: 'number', defaultValue: 2500, isCurrency: true },

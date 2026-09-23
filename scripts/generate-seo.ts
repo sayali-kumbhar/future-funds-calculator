@@ -43,12 +43,25 @@ function generateSitemap() {
   }));
 
   const allPages = [...corePages, ...calculatorPages, ...blogPages];
+
+  // Strict asset exclusion filter to guarantee NO non-HTML files/assets ever enter sitemap.xml
+  const DISALLOWED_ASSET_EXTENSIONS = /\.(ico|png|jpg|jpeg|gif|webp|svg|bmp|tiff|pdf|json|xml|txt|js|css|map|woff|woff2|ttf|eot)$/i;
+
+  const validContentPages = allPages.filter(page => {
+    if (!page.loc || typeof page.loc !== 'string') return false;
+    if (DISALLOWED_ASSET_EXTENSIONS.test(page.loc)) {
+      console.warn(`[sitemap] Excluding asset URL: ${page.loc}`);
+      return false;
+    }
+    return true;
+  });
+
   const today = new Date().toISOString().split('T')[0];
 
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
-  allPages.forEach(page => {
+  validContentPages.forEach(page => {
     xml += '  <url>\n';
     xml += `    <loc>${BASE_URL}${page.loc}</loc>\n`;
     xml += `    <lastmod>${today}</lastmod>\n`;
@@ -60,7 +73,7 @@ function generateSitemap() {
   xml += '</urlset>\n';
 
   fs.writeFileSync(path.join(PUBLIC_DIR, 'sitemap.xml'), xml, 'utf-8');
-  console.log(`Successfully generated sitemap.xml with ${allPages.length} URLs!`);
+  console.log(`Successfully generated sitemap.xml with ${validContentPages.length} URLs!`);
 }
 
 function generateRobots() {
@@ -77,7 +90,19 @@ Allow: /faq
 Allow: /contact
 Allow: /calculators
 Allow: /ai-blueprint
+Allow: /learn
+Allow: /quizzes
+Allow: /budget-planner
+Allow: /goal-tracker
+Allow: /net-worth-tracker
+Allow: /roadmap
 
+# Disallow non-HTML asset files from being crawled as content pages
+Disallow: /favicon.ico
+Disallow: /favicon.svg
+Disallow: /manifest.json
+
+# Disallow internal build artifacts
 Disallow: /assets/.aistudio/
 Disallow: /node_modules/
 Disallow: /dist/

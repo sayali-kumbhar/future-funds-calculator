@@ -7,7 +7,7 @@ export const post = {
   sections: [
     {
       heading: 'What is the FIRE Movement?',
-      content: 'FIRE (Financial Independence, Retire Early) is a movement focused on aggressive savings and conscious living. By living well below their means and investing up to 70% of their income, practitioners aim to achieve financial independence in their 30s or 40s instead of waiting until age 60.'
+      content: 'FIRE (Financial Independence, Retire Early) is a movement focused on aggressive savings and conscious living. By living well below their means and investing up to 70% of their income, practitioners aim to achieve financial independence in their 30s or 40s instead of waiting until age 60.\n\nTo see how your personal numbers fit across different strategies, test our free <a href="/calculators/fire" class="text-emerald-600 dark:text-emerald-400 underline font-semibold">FIRE calculator with Lean, Standard, and Fat FIRE modeling</a> to discover your exact retirement age.'
     },
     {
       heading: 'The Four Main Flavors of FIRE',
