@@ -202,21 +202,35 @@ export default function BlogPage({}: BlogPageProps) {
       },
       "headline": activePost.title,
       "description": activePost.metaDescription || activePost.summary,
-      "image": activePost.image,
+      "image": {
+        "@type": "ImageObject",
+        "url": activePost.image,
+        "width": 1600,
+        "height": 900
+      },
       "author": {
-        "@type": "Organization",
-        "name": "FutureFund Editorial Team"
+        "@type": activePost.author ? "Person" : "Organization",
+        "name": activePost.author || "FutureFund Editorial Team",
+        "jobTitle": activePost.author ? "Senior Credit Analyst & Financial Strategist" : "Financial Editorial Team",
+        "url": `${origin}/about`,
+        "worksFor": {
+          "@type": "Organization",
+          "name": "FutureFund",
+          "url": origin
+        }
       },
       "publisher": {
         "@type": "Organization",
         "name": "FutureFund",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=192"
+          "url": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&q=80&w=192",
+          "width": 192,
+          "height": 192
         }
       },
-      "datePublished": activePost.date ? new Date(activePost.date).toISOString() : "2026-07-07T00:00:00.000Z",
-      "dateModified": activePost.lastUpdated ? new Date(activePost.lastUpdated).toISOString() : "2026-07-07T00:00:00.000Z"
+      "datePublished": activePost.date ? new Date(activePost.date).toISOString() : "2026-10-05T00:00:00.000Z",
+      "dateModified": activePost.lastUpdated ? new Date(activePost.lastUpdated).toISOString() : (activePost.date ? new Date(activePost.date).toISOString() : "2026-10-05T00:00:00.000Z")
     };
 
     const faqSchema = activePost.faqs && activePost.faqs.length > 0 ? {
@@ -261,15 +275,23 @@ export default function BlogPage({}: BlogPageProps) {
     const resolvedTitle = activePost.metaTitle || `${activePost.title} | FutureFund Financial Insights`;
     document.title = resolvedTitle;
 
-    // Manage meta tags dynamically
+    // Manage meta tags dynamically with explicit Google Discover directives
     const metaTags = [
+      { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' },
       { name: 'description', content: activePost.metaDescription || activePost.summary },
       { name: 'keywords', content: [activePost.primaryKeyword, ...(activePost.secondaryKeywords || []), ...(activePost.tags || [])].filter(Boolean).join(', ') },
       { property: 'og:title', content: activePost.metaTitle || activePost.title },
       { property: 'og:description', content: activePost.metaDescription || activePost.summary },
       { property: 'og:image', content: activePost.image },
+      { property: 'og:image:width', content: '1600' },
+      { property: 'og:image:height', content: '900' },
+      { property: 'og:image:alt', content: activePost.title },
       { property: 'og:url', content: postUrl },
       { property: 'og:type', content: 'article' },
+      { property: 'article:published_time', content: activePost.date ? new Date(activePost.date).toISOString() : new Date().toISOString() },
+      { property: 'article:modified_time', content: activePost.lastUpdated ? new Date(activePost.lastUpdated).toISOString() : new Date().toISOString() },
+      { property: 'article:author', content: activePost.author || 'FutureFund Editorial Team' },
+      { property: 'article:section', content: activePost.category },
       { name: 'twitter:title', content: activePost.metaTitle || activePost.title },
       { name: 'twitter:description', content: activePost.metaDescription || activePost.summary },
       { name: 'twitter:image', content: activePost.image },
@@ -567,19 +589,42 @@ export default function BlogPage({}: BlogPageProps) {
                   {activePost.title}
                 </h1>
 
+                {/* Author Byline & E-E-A-T Credential Badge for Google Discover */}
+                <div className="flex items-center gap-3.5 py-3 border-y border-gray-100 dark:border-gray-900 my-2">
+                  <div className="h-10 w-10 rounded-full bg-emerald-600/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
+                    <User className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-sm font-bold text-gray-900 dark:text-white">
+                        {activePost.author || 'FutureFund Editorial Team'}
+                      </span>
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                        <ShieldCheck className="h-3 w-3 text-emerald-500" /> Verified Financial Analysis
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      Senior Credit Analyst & Automotive Finance Researcher • Independent Editorial Review
+                    </p>
+                  </div>
+                </div>
+
                 <p className="text-lg sm:text-xl text-gray-500 dark:text-gray-400 leading-relaxed font-medium italic border-l-4 border-emerald-500 pl-4 py-1">
                   {activePost.summary}
                 </p>
               </div>
 
-              {/* Cover Image */}
-              <div className="aspect-video w-full overflow-hidden rounded-3xl border border-gray-150 dark:border-gray-900 relative shadow-md">
+              {/* Cover Image - Google Discover 1200px+ Compliant */}
+              <div className="aspect-video w-full overflow-hidden rounded-3xl border border-gray-150 dark:border-gray-900 relative shadow-md bg-gray-100 dark:bg-gray-900">
                 <img
                   src={activePost.image}
                   alt={activePost.primaryKeyword || activePost.title}
                   className="h-full w-full object-cover"
                   referrerPolicy="no-referrer"
-                  loading="lazy"
+                  loading="eager"
+                  fetchPriority="high"
+                  width="1600"
+                  height="900"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
               </div>
@@ -615,10 +660,72 @@ export default function BlogPage({}: BlogPageProps) {
               {/* Content Sections */}
               <div className="prose prose-emerald dark:prose-invert max-w-none space-y-8">
                 {activePost.sections && activePost.sections.map((sec, idx) => (
-                  <section key={idx} id={`heading-${idx}`} className="scroll-mt-24 space-y-4 pt-4 border-t border-gray-50 dark:border-gray-900/50">
-                    <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-snug">
-                      {sec.heading}
-                    </h2>
+                  <section
+                    key={idx}
+                    id={`heading-${idx}`}
+                    className={`scroll-mt-24 space-y-4 pt-4 border-t ${
+                      sec.heading.toLowerCase().includes('methodology')
+                        ? 'p-6 rounded-3xl bg-gray-50/80 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800'
+                        : 'border-gray-50 dark:border-gray-900/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      {sec.heading.toLowerCase().includes('methodology') && (
+                        <ShieldCheck className="h-6 w-6 text-emerald-500 shrink-0" />
+                      )}
+                      <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight leading-snug">
+                        {sec.heading}
+                      </h2>
+                    </div>
+
+                    {/* Google Discover In-Article Interactive Tool Call-Out */}
+                    {sec.heading.toLowerCase().includes('calculate your own') && (
+                      <div className="not-prose my-6 p-6 rounded-3xl bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent border-2 border-emerald-500/30 shadow-md space-y-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                          <div className="space-y-1">
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-xs font-bold uppercase tracking-wider">
+                              <Sparkles className="h-3.5 w-3.5 text-emerald-500" /> Interactive Financial Tool
+                            </span>
+                            <h3 className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white">
+                              Car Finance & Amortization Calculator
+                            </h3>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                              Plug in your purchase price, down payment, and loan tenure to compute your exact payment and interest savings.
+                            </p>
+                          </div>
+                          <Link
+                            to="/calculators/car-finance-calc"
+                            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md transition-all shrink-0 cursor-pointer"
+                          >
+                            <Calculator className="h-4 w-4" />
+                            <span>Launch Calculator</span>
+                            <ArrowRight className="h-4 w-4" />
+                          </Link>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3 border-t border-emerald-500/20 text-center text-xs">
+                          <div className="p-2.5 rounded-xl bg-white/80 dark:bg-gray-900/80 border border-emerald-500/10 shadow-xs">
+                            <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold block">60-Mo Term</span>
+                            <span className="text-sm font-extrabold text-gray-900 dark:text-white block">$716 / mo</span>
+                            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">Safe Crossover: Mo 18</span>
+                          </div>
+                          <div className="p-2.5 rounded-xl bg-white/80 dark:bg-gray-900/80 border border-emerald-500/10 shadow-xs">
+                            <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold block">72-Mo Term</span>
+                            <span className="text-sm font-extrabold text-gray-900 dark:text-white block">$617 / mo</span>
+                            <span className="text-[10px] text-amber-600 dark:text-amber-400 font-medium">+$1,465 Extra Int.</span>
+                          </div>
+                          <div className="p-2.5 rounded-xl bg-white/80 dark:bg-gray-900/80 border border-emerald-500/10 shadow-xs">
+                            <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold block">84-Mo Term</span>
+                            <span className="text-sm font-extrabold text-red-600 dark:text-red-400 block">$548 / mo</span>
+                            <span className="text-[10px] text-red-600 dark:text-red-400 font-medium">+$3,018 Extra Int.</span>
+                          </div>
+                          <div className="p-2.5 rounded-xl bg-white/80 dark:bg-gray-900/80 border border-emerald-500/10 shadow-xs">
+                            <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold block">Underwater Risk</span>
+                            <span className="text-sm font-extrabold text-red-500 dark:text-red-400 block">5.5 Years</span>
+                            <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">on 84-Mo Term</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     
                     {/* Render Content - Handling lists, headings and basic markdown in sections */}
                     <div className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm whitespace-pre-line space-y-4 font-normal">

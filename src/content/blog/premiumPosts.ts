@@ -13,6 +13,7 @@ import { post as moneyFightsRelationshipsCompromise } from './posts/money-fights
 import { additionalPremiumPosts } from './posts/additionalPremiumPosts';
 import { newCalculatorsBlogs } from './posts/newCalculatorsBlogs';
 import { indianFinanceGuidePosts } from './posts/indianFinanceGuidePosts';
+import { post as carPaymentTrapDiscoverPost } from './posts/carPaymentTrapDiscoverPost';
 
 export const PRECOMPUTED_CONTENT_MAP: Record<string, {
   sections: { heading: string; content: string }[];
@@ -20,14 +21,18 @@ export const PRECOMPUTED_CONTENT_MAP: Record<string, {
   metaTitle?: string;
   readTime?: string;
   date?: string;
+  lastUpdated?: string;
+  author?: string;
   summary?: string;
   category?: string;
+  image?: string;
   tags?: string[];
   primaryKeyword?: string;
   secondaryKeywords?: string[];
   metaDescription?: string;
   faqs?: { question: string; answer: string }[];
 }> = {
+  'car-payment-trap-loan-term-savings': carPaymentTrapDiscoverPost,
   'how-much-money-to-retire': howMuchMoneyToRetire,
   'fire-movement-explained': fireMovementExplained,
   'best-sip-strategy-wealth': bestSipStrategyWealth,

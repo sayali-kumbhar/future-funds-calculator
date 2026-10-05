@@ -31,13 +31,16 @@ export const calculator: CalculatorConfig = {
         balance: Math.round(p * Math.pow(1 + r, i + 1)),
         principal: p
       }));
+      const multiplier = p > 0 ? (balance / p).toFixed(1) : '1.0';
       return {
         metrics: [
-          { label: 'Future Lump Sum Worth', value: balance, isPrimary: true, desc: 'Compounded balance' },
-          { label: 'Total Wealth Multiplier', value: (balance / p).toFixed(1) + 'x', desc: 'Ratio of final wealth to initial capital' }
+          { label: 'Future Lump Sum Worth', value: Math.round(balance), isPrimary: true, desc: 'Compounded balance' },
+          { label: 'Total Wealth Multiplier', value: multiplier + 'x', desc: 'Ratio of final wealth to initial capital' }
         ],
         chartData,
-        explanationText: `Your single deposit of ${p.toLocaleString()} expands ${ (balance/p).toFixed(1) }x over the course of ${t} years.`
+        explanationText: p > 0 
+          ? `Your single deposit of ${p.toLocaleString()} expands ${multiplier}x over the course of ${t} years.`
+          : `Enter an initial lump sum deposit amount to forecast compounding growth over ${t} years.`
       };
     }
   };

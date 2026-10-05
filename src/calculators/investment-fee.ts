@@ -28,27 +28,32 @@ export const calculator: CalculatorConfig = {
       const add = inputs.annualSip || 0;
       const grw = (inputs.grossYield || 9.5) / 100;
       const fee = (inputs.advisorFee || 1.5) / 100;
+      const years = inputs.years || 30;
+      const feePercent = inputs.advisorFee !== undefined ? inputs.advisorFee : 1.5;
       let balanceGross = start;
       let balanceNet = start;
       const chartData = [];
-      for (let y = 1; y <= inputs.years; y++) {
+      for (let y = 1; y <= years; y++) {
         balanceGross = balanceGross * (1 + grw) + add;
-        balanceNet = balanceNet * (1 + (grw - fee)) + add;
+        balanceNet = balanceNet * (1 + Math.max(0, grw - fee)) + add;
         chartData.push({
           year: `Yr ${y}`,
           grossValue: Math.round(balanceGross),
           netValue: Math.round(balanceNet),
-          feesLost: Math.round(balanceGross - balanceNet)
+          feesLost: Math.max(0, Math.round(balanceGross - balanceNet))
         });
       }
+      const percentDrained = balanceGross > 0 ? Math.max(0, (1 - balanceNet / balanceGross) * 100).toFixed(1) : '0.0';
       return {
         metrics: [
-          { label: 'Lost to Fees & Expenses', value: balanceGross - balanceNet, isPrimary: true, desc: 'Total compounding wealth drained' },
-          { label: 'Net Keepable Portfolio', value: balanceNet, desc: 'Your remaining wealth' },
-          { label: 'Percentage Drained', value: ((1 - balanceNet / balanceGross) * 100).toFixed(1) + '%', desc: 'Ratio of final wealth taken by fees' }
+          { label: 'Lost to Fees & Expenses', value: Math.max(0, Math.round(balanceGross - balanceNet)), isPrimary: true, desc: 'Total compounding wealth drained' },
+          { label: 'Net Keepable Portfolio', value: Math.round(balanceNet), desc: 'Your remaining wealth' },
+          { label: 'Percentage Drained', value: percentDrained + '%', desc: 'Ratio of final wealth taken by fees' }
         ],
         chartData,
-        explanationText: `Over ${inputs.years} years, a ${inputs.advisorFee}% annual fee drains ${Math.round(balanceGross - balanceNet).toLocaleString()}, capturing ${((1 - balanceNet/balanceGross)*100).toFixed(1)}% of your potential net worth.`
+        explanationText: balanceGross > 0
+          ? `Over ${years} years, a ${feePercent}% annual fee drains ${Math.max(0, Math.round(balanceGross - balanceNet)).toLocaleString()}, capturing ${percentDrained}% of your potential net worth.`
+          : `Enter your starting portfolio balance and annual contributions to analyze the fee erosion over ${years} years.`
       };
     }
   };

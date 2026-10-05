@@ -33,6 +33,13 @@ export function slugify(text: string): string {
 
 // 100 evergreen topic seeds
 export const BLOG_SEEDS = [
+  // Google Discover Feature Story & Timely Auto Financing Analysis
+  {
+    title: "The $700 Car Payment Trap That Quietly Drains Savings",
+    category: "Personal Finance",
+    summary: "With average auto payments topping $735 in late 2026, millions of car buyers are signing 72- and 84-month loans to stay under $700. Here is how extending your loan creates negative equity and drains thousands in compounding interest.",
+    slug: "car-payment-trap-loan-term-savings"
+  },
   // Core High-Intent Financial Guides & FIRE Resources
   { title: "How Much Money Do You Need to Retire? The Complete Math & Corpus Blueprint", category: "Retirement", summary: "Discover the exact formulas, metrics, and safe withdrawal rates to calculate your personal retirement corpus, adjust for inflation, and retire with peace of mind.", slug: "how-much-money-to-retire" },
   { title: "The FIRE Movement Explained: Lean FIRE, Fat FIRE, Barista FIRE & Coast FIRE", category: "Financial Freedom", summary: "A deep dive into the Financial Independence, Retire Early (FIRE) movement. Learn about Lean FIRE, Fat FIRE, Barista FIRE, and Coast FIRE.", slug: "fire-movement-explained" },

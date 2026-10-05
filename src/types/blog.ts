@@ -15,6 +15,7 @@ export interface BlogPost {
   relatedSlugs: string[];
   lastUpdated?: string;
   author?: string;
+  targetCalculator?: string;
   primaryKeyword?: string;
   secondaryKeywords?: string[];
   metaDescription?: string;
